@@ -1,0 +1,300 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/q8.css" />
+    <style>
+        .combo-box {
+            display: grid;
+            grid-template-columns: 20ch auto;
+        }
+
+        .dropdown-wrapper {
+            display: inline-block;
+            /*displays the button for dropdown and the dropdown list together and let them be placed in the same line as the label of the filed*/
+        }
+
+        .dropdown-field-wrapper {
+            display: inline;
+        }
+
+        .button_dropdown {
+            margin: 10px 0px 0 10px;
+            width: 15.8vw;
+            min-width: 220px;
+            height: 35px;
+            border-radius: 8px 0 0 8px;
+            background-color: rgb(235, 235, 235);
+            cursor: pointer;
+            box-sizing: border-box;
+            text-align: left;
+            padding-left: 10px;
+            font-size: 17;
+            font-family: "Roboto", sans-serif;
+            border-style: none;
+        }
+
+        .button_dropdown.active {
+            color: rgb(52, 108, 240);
+            ;
+        }
+
+        .icon-arrow-wrapper {
+            background-color: rgb(235, 235, 235);
+            float: right;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 10px 0 0;
+            width: 30px;
+            height: 35px;
+            background-size: 20px 20px;
+            background-position: center;
+            position: absolute;
+            display: inline;
+        }
+
+        .icon-arrow {
+            background: url(Images/icons8-sort-down-100.png) no-repeat;
+            background-color: rgb(235, 235, 235);
+            border-radius: 50%;
+            margin: 5px auto;
+            width: 24px;
+            height: 24px;
+            background-size: 20px 20px;
+            background-position: center;
+            position: absolute;
+            transition: transform 0.3s;
+        }
+
+        .icon-arrow.active {
+            background: url(Images/icons8-sort-down-blue-100.png) no-repeat;
+            background-size: 20px 20px;
+            background-position: center;
+        }
+
+        .radio_dropdown {
+            display: none;
+        }
+
+        .dropdown {
+            background-color: rgb(235, 235, 235);
+            transition: all 0.3s ease-in-out;
+            margin: 10px 10px 0 10px;
+            width: 15.8vw;
+            border-radius: 8px;
+            overflow: hidden;
+            position: absolute;
+            max-height: 0;
+            min-width: 250px;
+            z-index: 5;
+            /*This is required so that the appearing and disappearing of the dropdown does not effect the position of other elements*/
+        }
+
+        .dropdown.active {
+            max-height: 252px;
+            opacity: 1;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .dropdown.active::-webkit-scrollbar {
+            width: 10px;
+            background-color: rgb(235, 235, 235);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .dropdown.active::-webkit-scrollbar-thumb {
+            background-color: rgba(169, 165, 165, 0.250);
+            border-radius: 8px 8px 8px 8px;
+            width: 5px;
+        }
+
+        .dropdown-menu .option {
+            padding: 5px 0 5px 0;
+            border-radius: 3px;
+        }
+
+        .dropdown-menu .option:hover {
+            background-color: rgba(169, 165, 165, 0.250);
+            cursor: pointer;
+        }
+
+        .button {
+            width: 442px;
+            margin: 0 auto;
+        }
+
+        #show-subjects {
+            width: 432px;
+            height: 30px;
+            float: right;
+            margin: 10px 10px 15px 10px;
+            font-size: 14px;
+            color: white;
+            background-color: rgb(52, 108, 240);
+            border-style: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #show-subjects:hover {
+            background-color: rgb(138, 172, 252);
+        }
+
+        #show-subjects:focus {
+            border: none;
+            outline: none;
+        }
+
+        .error {
+            margin: 5px 20px 15px 27px;
+            width: 27vw;
+            height: fit-content;
+            font-size: 95%;
+            border-style: none;
+            color: rgb(181, 13, 13);
+            box-sizing: border-box;
+        }
+
+        .heading {
+            font-size: 22;
+            font-weight: 600;
+            margin: 0 10px 10px 10px;
+            padding: 5px;
+        }
+
+        #subject-description.active {
+            min-width: 432px;
+            max-width: 432px;
+            background-color: rgb(253, 244, 220);
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .subject-wrapper {
+            height: fit-content;
+            margin: 20px;
+            display: grid;
+            grid-template-columns: 5ch auto;
+            max-width: inherit;
+        }
+
+        .bullet {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            padding: 4px;
+
+            background: rgba(215, 197, 149, 0.5);
+            border: 2px solid rgb(102, 102, 102);
+            color: rgb(102, 102, 102);
+            text-align: center;
+
+            font: 19px Arial, sans-serif;
+        }
+
+        .subject {
+            padding: 5px 5px 5px 20px;
+            text-align: left;
+            background-color: rgba(215, 197, 149, 0.5);
+            border-radius: 8px;
+            font-size: 20;
+            display: inline;
+            color: rgb(102, 102, 102);
+        }
+    </style>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="main_wrapper">
+        <div class="form_wrapper">
+            <div class="icon">
+                <span id="K">K</span><span id="M">M</span>
+                <span id="f">D</span><span id="o">r</span><span id="r">o</span><span id="m">p</span><span
+                    id="K">d</span><span id="M">o</span><span id="f">w</span><span id="o">n</span>
+            </div>
+            <div>
+                <p><sup><strong><span id="asterisk" title="required" aria-label="required"
+                                style="color: red;">*</span></strong></sup> marked fields are mandatory.</p>
+            </div>
+            <form id="first_form" method="post" novalidate>
+                <section id="semester_details">
+                    <ul>
+                        <li class="combo-box" id="year-selection-dropdown">
+                            <label>
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Year : </span>
+                            </label>
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-field-wrapper">
+                                    <input class="button_dropdown" type="button" value="Choose Year"
+                                        onclick="dropdown_handler('year-selection-dropdown')" />
+                                    <span class="icon-arrow-wrapper"><span class="icon-arrow"
+                                            onclick="dropdown_handler('year-selection-dropdown')"></span></span>
+                                </div>
+                                <div class="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="1st" name="year" />
+                                            <label for="1st">1st</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="2nd" name="year" />
+                                            <label for="2nd">2nd</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="3rd" name="year" />
+                                            <label for="3rd">3rd</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="4th" name="year" />
+                                            <label for="4th">4th</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="combo-box" id="semester-selection-dropdown">
+                            <label>
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Semester : </span>
+                            </label>
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-field-wrapper">
+                                    <input class="button_dropdown" type="button" value="Choose Year"
+                                        onclick="dropdown_handler('semester-selection-dropdown')" />
+                                    <span class="icon-arrow-wrapper"><span class="icon-arrow"
+                                            onclick="dropdown_handler('semester-selection-dropdown')"></span></span>
+                                </div>
+                                <div class="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="1st" name="semester" />
+                                            <label for="1st">1st</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="2nd" name="semester" />
+                                            <label for="2nd">2nd</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+                <div class="button">
+                    <button id="show-subjects" type="button" onclick="showSubjects()">Show Subjects</button>
+                </div>
+            </form>
+            <div id="subject-description"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="JS/q8.js"></script>
+</body>
+
+</html>

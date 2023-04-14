@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="CSS/q22.css">
+</head>
+
+<body>
+
+
+    <div style="display: flex;flex-direction: column; align-items: center;">
+        <h2>Click the button to open an account</h2>
+        <button onclick="displayForm()" style="width:auto;">Open Account</button>
+    </div>
+
+
+    <div id="id01" class="modal">
+
+        <form id="accountForm" class="modal-content animate" onsubmit="addAccount(event)">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                    title="Close Modal">&times;</span>
+                <img src="Images/img_avatar.png" alt="Avatar" class="avatar">
+            </div>
+            <p class="infolabel" id="info_updatePopup" aria-live="polite" style="text-align: center;"></p>
+            <div class="container">
+                <label for="user"><b>Username</b></label>
+                <input id="user" type="text" placeholder="Enter Username" name="user" onkeyup="check()" required>
+
+                <label for="pass"><b>Password</b></label>
+                <input id="pass" type="password" placeholder="Enter Password" name="pass" required>
+
+                <label for="email"><b>Email</b></label>
+                <input id="email" type="email" placeholder="Enter Email" name="email" required>
+
+                <label for="dept"><b>Department</b></label>
+                <input id="dept" type="text" placeholder="Enter Department" name="dept" required>
+
+
+                <button type="submit" id="submit-btn">Confirm</button>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button"
+                    onclick="document.getElementById('id01').style.display='none';document.getElementById('accountForm').reset(); "
+                    class="cancelbtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function displayForm() {
+            document.getElementById('id01').style.display = 'block';
+            parent = document.getElementById('info_updatePopup');
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        function check() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("info_updatePopup").innerHTML = this.responseText;
+                    if (document.getElementById("info_updatePopup").textContent.trim() === "Username is not available") {
+                        document.getElementById("submit-btn").disabled = true;
+                    }
+                    else {
+                        document.getElementById("submit-btn").disabled = false;
+                    }
+                }
+            };
+            xhttp.open("GET", "scripts/q22_check_script.jsp?user=" + document.getElementById("user").value, true);
+            xhttp.send();
+        }
+
+        function addAccount(event) {
+            event.preventDefault();
+
+            var user = document.getElementById("user").value;
+            var pass = document.getElementById("pass").value;
+            var email = document.getElementById("email").value;
+            var dept = document.getElementById("dept").value;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("info_updatePopup").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("POST", "scripts/q22_addAccount_script.jsp", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`user=${user}&pass=${pass}&email=${email}&dept=${dept}`);
+            document.getElementById("accountForm").reset();
+        }
+    </script>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+        style="text-decoration: none;">#Go Back to Main menu</a></div>
+</body>
+
+</html>

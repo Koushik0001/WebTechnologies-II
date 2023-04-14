@@ -1,0 +1,550 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/q8.css" />
+    <link rel="stylesheet" href="CSS/q13.css" />
+    <style>
+        .blurr-effect {
+            filter: blur(12px);
+            background-attachment: fixed;
+        }
+
+        .textInput,
+        .combo-box {
+            display: grid;
+            grid-template-columns: 20ch auto;
+        }
+
+        .dropdown-wrapper {
+            display: inline-block;
+            /*displays the button for dropdown and the dropdown list together and let them be placed in the same line as the label of the filed*/
+            color: black;
+        }
+
+        .dropdown-field-wrapper {
+            display: inline;
+        }
+
+        .button_dropdown {
+            margin: 10px 0px 0 10px;
+            width: 15.8vw;
+            min-width: 220px;
+            height: 35px;
+            border-radius: 8px 0 0 8px;
+            background-color: rgb(235, 235, 235);
+            cursor: pointer;
+            box-sizing: border-box;
+            text-align: left;
+            padding: 2px 0 0 10px;
+            font-size: 17;
+            font-family: "Roboto", sans-serif;
+            border-style: none;
+        }
+
+        .button_dropdown.active {
+            color: rgb(52, 108, 240);
+            ;
+        }
+
+        .icon-arrow-wrapper {
+            background-color: rgb(235, 235, 235);
+            float: right;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 10px 0 0;
+            width: 30px;
+            height: 35px;
+            background-size: 20px 20px;
+            background-position: center;
+            position: absolute;
+            display: inline;
+        }
+
+        .icon-arrow {
+            background: url(Images/icons8-sort-down-100.png) no-repeat;
+            background-color: rgb(235, 235, 235);
+            border-radius: 50%;
+            margin: 5px auto;
+            width: 24px;
+            height: 24px;
+            background-size: 20px 20px;
+            background-position: center;
+            position: absolute;
+            transition: transform 0.3s;
+        }
+
+        .icon-arrow.active {
+            background: url(Images/icons8-sort-down-blue-100.png) no-repeat;
+            background-size: 20px 20px;
+            background-position: center;
+        }
+
+        .radio_dropdown {
+            display: none;
+        }
+
+        .dropdown {
+            background-color: rgb(235, 235, 235);
+            transition: all 0.3s ease-in-out;
+            margin: 10px 10px 0 10px;
+            width: 15.8vw;
+            border-radius: 8px;
+            overflow: hidden;
+            position: absolute;
+            max-height: 0;
+            min-width: 250px;
+            z-index: 5;
+            /*This is required so that the appearing and disappearing of the dropdown does not effect the position of other elements*/
+        }
+
+        .dropdown.active {
+            max-height: 252px;
+            opacity: 1;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .dropdown.active::-webkit-scrollbar {
+            width: 10px;
+            background-color: rgb(235, 235, 235);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .dropdown.active::-webkit-scrollbar-thumb {
+            background-color: rgba(169, 165, 165, 0.250);
+            border-radius: 8px 8px 8px 8px;
+            width: 5px;
+        }
+
+        .dropdown-menu .option {
+            padding: 5px 0 5px 0;
+            border-radius: 3px;
+        }
+
+        .dropdown-menu .option:hover {
+            background-color: rgba(169, 165, 165, 0.250);
+            cursor: pointer;
+        }
+
+        .button {
+            width: 442px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            width: 432px;
+            height: 30px;
+            float: right;
+            margin: 10px 10px 15px 10px;
+            font-size: 14px;
+            color: white;
+            background-color: rgb(52, 108, 240);
+            border-style: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: rgb(138, 172, 252);
+        }
+
+        .btn:focus {
+            border: none;
+            outline: none;
+        }
+
+        .infolabel {
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            border-radius: 10px;
+            padding: 0 10px;
+        }
+
+        .infolabel.success {
+            background-color: rgba(82, 186, 58, 0.723);
+        }
+
+        .infolabel.error {
+            background-color: rgba(171, 9, 9, 1);
+        }
+
+        .heading {
+            font-size: 22;
+            font-weight: 600;
+            margin: 0 10px 10px 10px;
+            padding: 5px;
+        }
+
+        #subject-description.active {
+            min-width: 432px;
+            max-width: 432px;
+            background-color: rgb(253, 244, 220);
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .subject-wrapper {
+            height: fit-content;
+            margin: 20px;
+            display: grid;
+            grid-template-columns: 5ch auto;
+            max-width: inherit;
+        }
+
+        .bullet {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            padding: 4px;
+
+            background: rgba(215, 197, 149, 0.5);
+            border: 2px solid rgb(102, 102, 102);
+            color: rgb(102, 102, 102);
+            text-align: center;
+
+            font: 19px Arial, sans-serif;
+        }
+
+        .subject {
+            padding: 5px 5px 5px 20px;
+            text-align: left;
+            background-color: rgba(215, 197, 149, 0.5);
+            border-radius: 8px;
+            font-size: 20;
+            display: inline;
+            color: rgb(102, 102, 102);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            left: 31.5%;
+            top: 15%;
+            z-index: 10;
+            background-color: rgba(98, 163, 188, 0.9);
+            color: white;
+        }
+
+        #items-description {
+            display: none;
+        }
+
+        #items-description.active {
+            display: block;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .right_input {
+            border: 2px solid rgba(0, 133, 1, 1);
+            background-color: rgba(181, 236, 184, 0.333);
+        }
+
+        .wrong_input {
+            border: 2px solid rgba(133, 0, 1, 1);
+            background-color: rgba(255, 213, 213, 0.333);
+        }
+
+        input {
+            margin: 10px 0 0 10px;
+            padding: 10px;
+            min-width: 250px;
+            height: 35px;
+            border-style: solid;
+            border: 0 0 1px 0;
+            border-radius: 8px;
+            border-color: rgba(13, 131, 248, 0.3);
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .textInput>input {
+            font-size: 18;
+        }
+
+        .textInput>input:not(:focus) {
+            background-color: rgb(235, 235, 235);
+        }
+
+        .textInput>input:focus {
+            border: 2px solid blue;
+            outline: none;
+        }
+
+        .form_wrapper.popup {
+            padding: 40px;
+        }
+
+        .btnGroup-popup {
+            margin: 15px 0 0 25px;
+            display: grid;
+            grid-template-columns: 318px 80px;
+            justify-items: end;
+        }
+
+        .btnPopup {
+            display: inline;
+            height: 30px;
+            margin: 5px;
+            background-color: #7b38d8;
+            padding: 3px;
+            width: 70px;
+            color: #ffffff;
+            text-align: center;
+            border-style: none;
+            border-radius: 5px;
+            font-size: 16;
+        }
+
+        .btnPopup:hover {
+            cursor: pointer;
+        }
+
+        .btnPopup.cancel {
+            background-color: rgba(171, 9, 9, 1);
+        }
+
+        .btnPopup.cancel:hover {
+            background-color: rgba(204, 41, 41, 0.712);
+        }
+
+        .btnPopup.ok {
+
+            background-color: rgba(25, 122, 4, 1);
+        }
+
+        .btnPopup.ok:hover {
+            background-color: rgba(82, 186, 58, 0.723);
+        }
+    </style>
+    <title>Login</title>
+</head>
+
+<body>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px;"><a href="." style="text-decoration: none;">#Go Back to Main menu</a></div>
+
+    <div class="main_wrapper">
+        <div class="form_wrapper popup" id="add-popup">
+            <form id="add-popup-form" method="post" novalidate>
+                <section id="semester_details">
+                    <ul>
+                        <li>
+                            <p class="infolabel" id="info_addPopup" aria-live="polite"></p>
+                        </li>
+                        <li class="combo-box" id="addPopup-component-selection-dropdown">
+                            <label>
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Component : </span>
+                            </label>
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-field-wrapper">
+                                    <input class="button_dropdown" type="button" value="Choose Component Type"
+                                        onclick="dropdown_handler('addPopup-component-selection-dropdown')" />
+                                    <span class="icon-arrow-wrapper"><span class="icon-arrow"
+                                            onclick="dropdown_handler('addPopup-component-selection-dropdown')"></span></span>
+                                </div>
+                                <div class="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="hdd" name="component" />
+                                            <label for="hdd">HDD</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="monitor" name="component" />
+                                            <label for="monitor">Monitor</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="textInput">
+                            <label for="manufacturer">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Manufacturer : </span>
+                            </label>
+                            <input id="manufacturer" type="text" placeholder="Manufacturer" required name="manufacturer"
+                                onkeyup="validateManufacturer();" />
+                        </li>
+                        <li class="textInput">
+                            <label for="price">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Price : </span>
+                            </label>
+                            <input id="price" type="text" placeholder="Price" required name="price"
+                                onkeyup="validatePrice();" />
+                        </li>
+                    </ul>
+                    <div class="btnGroup-popup">
+                        <div class="button">
+                            <button class="btnPopup cancel" id="btn-cancel-addPopup" type="button"
+                                onclick="cancelAdd()">Cancel</button>
+                        </div>
+                        <div class="button">
+                            <button class="btnPopup ok" id="btn-ok-addPopup" type="button" onclick="okAdd()">Ok</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <div class="form_wrapper popup" id="delete-popup">
+            <form id="delete-popup-form" method="post" novalidate>
+                <section id="semester_details">
+                    <ul>
+                        <li>
+                            <p class="infolabel" id="info_deletePopup" aria-live="polite"></p>
+                        </li>
+                        <li class="combo-box" id="deletePopup-component-selection-dropdown">
+                            <label>
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Component : </span>
+                            </label>
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-field-wrapper">
+                                    <input class="button_dropdown" type="button" value="Choose Component Type"
+                                        onclick="dropdown_handler('deletePopup-component-selection-dropdown')" />
+                                    <span class="icon-arrow-wrapper"><span class="icon-arrow"
+                                            onclick="dropdown_handler('deletePopup-component-selection-dropdown')"></span></span>
+                                </div>
+                                <div class="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="hdd" name="component" />
+                                            <label for="hdd">HDD</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="monitor" name="component" />
+                                            <label for="monitor">Monitor</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="textInput">
+                            <label for="manufacturer">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Manufacturer : </span>
+                            </label>
+                            <input id="manufacturer" type="text" placeholder="Manufacturer" required name="manufacturer"
+                                onkeyup="validateManufacturer();" />
+                        </li>
+                    </ul>
+                    <div class="btnGroup-popup">
+                        <div class="button">
+                            <button class="btnPopup cancel" id="btn-cancel-deletePopup" type="button"
+                                onclick="cancelDelete()">Cancel</button>
+                        </div>
+                        <div class="button">
+                            <button class="btnPopup ok" id="btn-ok-deletePopup" type="button"
+                                onclick="okDelete()">Ok</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <div class="form_wrapper popup" id="update-popup">
+            <form id="update-popup-form" method="post" novalidate>
+                <section id="semester_details">
+                    <ul>
+                        <li>
+                            <p class="infolabel" id="info_updatePopup" aria-live="polite"></p>
+                        </li>
+                        <li class="combo-box" id="updatePopup-component-selection-dropdown">
+                            <label>
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Component : </span>
+                            </label>
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-field-wrapper">
+                                    <input class="button_dropdown" type="button" value="Choose Component Type"
+                                        onclick="dropdown_handler('updatePopup-component-selection-dropdown')" />
+                                    <span class="icon-arrow-wrapper"><span class="icon-arrow"
+                                            onclick="dropdown_handler('updatePopup-component-selection-dropdown')"></span></span>
+                                </div>
+                                <div class="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="hdd" name="component" />
+                                            <label for="hdd">HDD</label>
+                                        </li>
+                                        <li class="option">
+                                            <input type="radio" class="radio_dropdown" id="monitor" name="component" />
+                                            <label for="monitor">Monitor</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="textInput">
+                            <label for="manufacturer">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Manufacturer : </span>
+                            </label>
+                            <input id="manufacturer" type="text" placeholder="Manufacturer" required name="manufacturer"
+                                onkeyup="validateManufacturer();" />
+                        </li>
+                        <li class="textInput">
+                            <label for="price">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Price : </span>
+                            </label>
+                            <input id="price" type="text" placeholder="Price" required name="price"
+                                onkeyup="validatePrice();" />
+                        </li>
+                    </ul>
+                    <div class="btnGroup-popup">
+                        <div class="button">
+                            <button class="btnPopup cancel" id="btn-cancel-updatePopup" type="button"
+                                onclick="cancelUpdate()">Cancel</button>
+                        </div>
+                        <div class="button">
+                            <button class="btnPopup ok" id="btn-ok-updatePopup" type="button"
+                                onclick="okUpdate()">Ok</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <div class="form_wrapper active" id="main-form">
+            <div class="icon">
+                <span id="K">K</span><span id="M">M</span>
+                <span id="f">D</span><span id="o">r</span><span id="r">o</span><span id="m">p</span><span
+                    id="K">d</span><span id="M">o</span><span id="f">w</span><span id="o">n</span>
+            </div>
+            <div>
+                <p><sup><strong><span id="asterisk" title="required" aria-label="required"
+                                style="color: red;">*</span></strong></sup> marked fields are mandatory.</p>
+            </div>
+            <div class="button">
+                <button class="btn" id="btn-add" type="button" onclick="add()">add</button>
+            </div>
+            <div class="button">
+                <button class="btn" id="btn-show" type="button" onclick="show()">show</button>
+            </div>
+            <div class="button">
+                <button class="btn" id="btn-update" type="button" onclick="update()">update</button>
+            </div>
+            <div class="button">
+                <button class="btn" id="btn-delete" type="button" onclick="remove()">delete</button>
+            </div>
+            <div id="items-description"></div>
+        </div>
+    </div>
+    
+    <!-- <script type="text/javascript" src="JS/q8.js"></script> -->
+    <script type="text/javascript" src="JS/q13.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/q4.css">
+    <style>
+        input {
+            margin: 10px 20px 0 20px;
+            width: 28vw;
+            padding: 15px;
+            height: 30px;
+            border-style: solid;
+            border: 0 0 1px 0;
+            border-radius: 8px;
+            border-color: rgba(13, 131, 248, 0.3);
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+    </style>
+    <script type="text/javascript" src="JS/q5.js"></script>
+    <title>Login</title>
+</head>
+
+<body>
+
+    <div class="main_wrapper">
+        <div class="form_wrapper">
+            <div class="icon">
+                <span id="K">K</span><span id="M">M</span>
+                <span id="f">F</span><span id="o">o</span><span id="r">r</span><span id="m">m</span>
+            </div>
+            <div>
+                <p><sup><strong><span id="asterisk" title="required" aria-label="required"
+                                style="color: red;">*</span></strong></sup> marked fields are mandatory.</p>
+            </div>
+            <form id="first_form" method="post" novalidate>
+                <section id="login_details">
+                    <ul>
+                        <li>
+                            <label for="inputName">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Name : </span>
+                            </label>
+                            <input id="inputName" type="text" placeholder="Name" required name="user_name"
+                                onkeyup="validateName();" />
+                            <p class="error" id="error_name" aria-live="polite"></p>
+                        </li>
+                        <li>
+                            <label for="inputPassword">
+                                <sup><strong><span id="asterisk" aria-label="required"
+                                            style="color: red;">*</span></strong></sup>
+                                <span>Password : </span>
+                            </label>
+                            <input id="inputPassword" type="password" placeholder="Password" name="user_password"
+                                required="true" onkeyup="validatePassword();" />
+                            <p class="error" id="error_password" aria-live="polite"></p>
+                            
+                        </li>
+                    </ul>
+                    <div class="button">
+                        <button type="submit">Submit</button>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

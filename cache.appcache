@@ -1,0 +1,11 @@
+CACHE MANIFEST
+
+CACHE:
+Images/image.jpg
+JS/q5.js
+
+NETWORK:
+*
+
+FALLBACK:
+#offline.html

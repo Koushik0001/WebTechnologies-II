@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Server Sent Events</title>
+    <style>
+        .error {
+            margin: 5px 20px 0 27px;
+            width: 27vw;
+            height: fit-content;
+            padding: 0px 13px;
+            font-size: 80%;
+            border-style: none;
+            color: rgb(181, 13, 13);
+            box-sizing: border-box;
+        }
+
+        button:disabled {
+            color: graytext;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    Receive Stock Prices
+    <button id="startButton" onclick="start()" style="background-color: rgb(1, 121, 11); color: white;">Start</button>
+    <button onclick="stop()" style="background-color: rgb(122, 10, 10); color: white;">Stop</button>
+    <p class="error" id="error_label" aria-live="polite"></p>
+    Connection Status : <span id="status" readonly="readonly"
+        style="color:rgb(1, 121, 11); font-weight: 900; font-size: 18px;"></span>
+    <br />
+    <br />
+    Price of Stock 1 : &nbsp $ &nbsp <span id="stock1"></span> &nbsp &nbsp &nbsp <span class="arrow" id="stock1Arrow"
+        style="font-size: 30px;"></span>
+    <br />
+    <br />
+    Price of Stock 2 : &nbsp $ &nbsp <span id="stock2"></span> &nbsp &nbsp &nbsp <span class="arrow" id="stock2Arrow"
+        style="font-size: 30px;"></span>
+
+
+    <canvas id="myChart" style="width:100%; height: 400px;"></canvas>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+            style="text-decoration: none;">#Go Back to Main menu</a></div>
+    <script>
+        var eventSource = null;
+
+        let stock1PrevPrice = 0;
+        let stock2PrevPrice = 0;
+        let xAxisTick = 1;
+        function start() {
+            eventSource = new EventSource("sse");
+            document.getElementById("status").innerHTML = "";
+            eventSource.onopen = function () {
+                document.getElementById("status").innerHTML = "Connected... " + "\n";
+                document.getElementById("status").style.color = "rgb(1, 121, 11)";
+                document.getElementById("status").style.fontFamily = "monospace";
+            };
+            eventSource.onerror = function () {
+                document.getElementById("error_label").innerHTML = "Error Occured while connecting " + "\n";
+            };
+            eventSource.addEventListener("stock1", function (event) {
+                let stock1 = parseInt(event.data);
+                console.log(event.data);
+
+
+                if (stock1 >= stock1PrevPrice) {
+                    document.getElementById("stock1").innerHTML = stock1;
+                    document.getElementById("stock1Arrow").innerHTML = "&uarr;";
+                    document.getElementById("stock1").style.color = "rgb(1,121,11)";
+                    document.getElementById("stock1Arrow").style.color = "rgb(1,121,11)";
+                }
+                else {
+                    document.getElementById("stock1").innerHTML = stock1;
+                    document.getElementById("stock1Arrow").innerHTML = "&darr;";
+                    document.getElementById("stock1").style.color = "rgb(122, 10, 10)";
+                    document.getElementById("stock1Arrow").style.color = "rgb(122, 10, 10)";
+                }
+
+                stock1PrevPrice = stock1;
+                pushValueChart(0, stock1, xAxisTick);
+
+            });
+            eventSource.addEventListener("stock2", function (event) {
+                let stock2 = parseInt(event.data);
+                console.log(event.data);
+
+                if (stock2 >= stock1PrevPrice) {
+                    document.getElementById("stock2").innerHTML = stock2;
+                    document.getElementById("stock2Arrow").innerHTML = "&uarr;";
+                    document.getElementById("stock2").style.color = "rgb(1,121,11)";
+                    document.getElementById("stock2Arrow").style.color = "rgb(1,121,11)";
+                }
+                else {
+                    document.getElementById("stock2").innerHTML = stock2;
+                    document.getElementById("stock2Arrow").innerHTML = "&darr;";
+                    document.getElementById("stock2").style.color = "rgb(122, 10, 10)";
+                    document.getElementById("stock2Arrow").style.color = "rgb(122, 10, 10)";
+                }
+
+                stock2PrevPrice = stock2;
+                pushValueChart(1, stock2, xAxisTick);
+                xAxisTick++;
+            });
+            startButton.disabled = true;
+        }
+
+        function stop() {
+            eventSource.close();
+            document.getElementById("error_label").innerHTML = "";
+            document.getElementById("status").innerHTML = "Disconnected... " + "\n";
+            document.getElementById("status").style.color = "rgb(122, 10, 10)";
+            document.getElementById("status").style.fontFamily = "monospace";
+            startButton.disabled = false;
+        }
+    </script>
+    <script>
+        const xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+
+
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],
+                datasets: [{
+                    label: 'Stock 1',
+                    data: [],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Stock 2',
+                    data: [],
+                    backgroundColor: [
+                        'rgb(0,255,0,0.2)'
+                    ],
+                    borderColor: [
+                        'green'
+                    ],
+                    borderWidth: 1
+                }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        suggestedMin: 0,
+                        suggestedMax: 1000,
+                        title: {
+                            display: true,
+                            text: 'Stock Price',
+                            color: 'black'
+
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time',
+                            color: 'black',
+                            padding: {
+                                top: 25
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
+        function pushValueChart(datasetIndex, value, xAxisTick) {
+            if (datasetIndex == 0) {
+                if (xAxisTick > 40) {
+                    myChart.data.labels.push(xAxisTick);
+                    myChart.data.labels.shift();
+                    myChart.data.datasets[0].data.shift();
+                    myChart.data.datasets[1].data.shift();
+                }
+            }
+
+            myChart.data.datasets[datasetIndex].data.push(value);
+            if (datasetIndex == 1)
+                myChart.update();
+        }
+    </script>
+
+</body>
+
+</html>

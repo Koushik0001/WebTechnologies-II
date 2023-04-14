@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="application/xml" href="index.xslt"?>
+<!DOCTYPE assignments[
+    <!ELEMENT assignments (question*)>
+    <!ELEMENT question (#PCDATA)>
+   
+    <!ATTLIST question link CDATA "noLink">
+    <!ATTLIST question no ID #REQUIRED>
+    <!ATTLIST question image CDATA #REQUIRED>
+]>
+
+    
+<assignments>
+    <question no="q1" image="q1.png">
+        Download apache tomcat (.zip) and install(unzip) it. Read documentation and configure tomcat. Check the port it uses. Start the web server. Check if it is working or not. Now, write a simple HTML file (say first.html) containing your name and put it in the web server‟s ROOT directory. Now check if it is available through the web browser and appropriate URL. Change the port of the web server to 8002 and restart the web server. Check if it is working or not.
+    </question>
+    <question no="q2" image="q2.png">
+        Using telnet application and HTTP, obtain the file first.html from a remote machine.
+    </question>
+    <question no="q4" link="q4.html" image="q4.png">
+        Design a web page containing one text box (for login name) and one password field (for password) and a submit button. Label these items.
+    </question>
+    <question no="q5" image="q5.png">
+        Write a necessary JavaScript functions to verify the content of text box and password field in previous assignments. If there is any error, show appropriate message in red color in a label. Use following rules:
+            A login name can only have alphanumeric characters and '_'(underscore)
+            Number of characters in the login must not exceed 10
+            A password must have 6 to 10 characters containing at least one digit and one uppercase letter.
+    </question>
+    <question no="q12" image="q12.png" link="q12.html">
+        Use HTML5 canvas and &lt;SVG&gt; tag to create following picture. Create one and use transformation to create others.
+    </question>
+    <question no="q13" image="q13.png" link="q13.html">
+        Consider a web page that locally stores (using IndexDB) the details (such as name, manufacturer, price etc) of different components(e.g. HDD, Monitor etc) of the computer. The web page contains buttons captioned “add”, “show”, “update” and “delete”. When “add” button is clicked, the pages shows a dialog box to get the details of the item to be added and inserts it to the IndexDB. Implement the functionality of the other buttons. Consider (name, manufacturer) as the primary key.
+    </question>
+    <question no="q15" link="q15.html" image="q15.png">
+        Write a web page that generates a factorial table using a web worker. The main page sends an integer number (say 5) and the worker returns the factorial table (1 to 5) and the main page finally displays it.
+    </question>
+    <question no="q18" link="q18.html" image="q18.png">
+        Develop a simple web page (use SSE) showing price of at least two stocks.
+    </question>
+    <question no="q19" link="q19.jsp" image="q19.png">
+        Create a web page with appropriate forms, and servlets, to perform each of the following actions:
+        
+        a. Form 1: Accepts a string, and displays a list of students whose name contains the given string, their roll numbers, dept_name etc.
+        
+        b. Form 2: Shows a drop down menu containing the names of all departments (generate this from the database), and when a particular department is selected, a list of all students in the department is displayed (as in the previous question).
+    </question>
+    <question no="q22" link="q22.html" image="q22.png">
+        Design a simple page to open an account. The page should contain one text box for login name, one password box and other information. Use AJAX technology to inform if the login name typed is available or not. Write a target JSP page to insert data supplied in the form into the database.
+    </question>
+</assignments>

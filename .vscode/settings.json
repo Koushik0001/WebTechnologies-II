@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/koushikmahanta/Desktop/Applications/apache-tomcat-9.0.71/lib/websocket-api.jar",
+        "/Users/koushikmahanta/Desktop/Applications/apache-tomcat-9.0.71/lib/servlet-api.jar",
+        "/Users/koushikmahanta/Desktop/Applications/apache-tomcat-9.0.71/lib/mysql-connector-java-8.0.30.jar"
+    ]
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Factorial Table Generator</title>
+    <style>
+        .wrapper
+        {
+            width: 500px;
+            margin: auto;
+        }
+        table,
+        th,
+        td {
+            border: none;
+            border-collapse: separate;
+            background-color: rgba(215, 197, 149, 0.5);
+            text-align: center;
+        }
+        th
+        {
+            background-color: rgba(137, 108, 29, 0.937);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">    
+        <h1>Factorial Table Generator</h1>
+        <span style="font-family: monospace; color:forestgreen;">Enter an integer number:</span>
+        <input type="number" id="number" value="5">
+        <button onclick="generateTable()">Generate Table</button>
+        <br/>
+        <br/>
+        <br/>
+        <table id="table" style="min-width:100%"></table>
+    </div>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px;"><a href="." style="text-decoration: none;">#Go Back to Main menu</a></div>
+
+    <script>
+        function generateTable() {
+            const num = document.getElementById('number').value;
+
+            // Create a new worker
+            const worker = new Worker('JS/worker.js');
+
+            // Send the input value to the worker
+            worker.postMessage(num);
+
+            // Receive the factorial table from the worker
+            worker.onmessage = function (event) {
+                // Get the factorial table data from the event
+                const tableData = event.data;
+
+                // Create a new table row for each factorial value
+                let html = '<tr><th style="width:50%">Number</th><th>Factorial</th></tr>';
+                for (let i = 1; i <= num; i++) {
+                    html += '<tr><td>' + i + '</td><td>' + tableData[i - 1] + '</td></tr>';
+                }
+
+                // Set the table HTML
+                document.getElementById('table').innerHTML = html;
+            };
+        }
+    </script>
+</body>
+
+</html>

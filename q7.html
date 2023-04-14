@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/q4.css" />
+    <style>
+        fieldset {
+            width: 30vw;
+            border-style: solid;
+            border-radius: 8px;
+            border-color: rgba(13, 131, 248, 0.3);
+        }
+
+        legend {
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            cursor: pointer;
+            padding: 0 0 0 20px;
+        }
+
+        #optioanlDisplay {
+            display: none;
+        }
+
+        input[type="date"] {
+            padding-left: 20px;
+        }
+
+        .radio_button {
+            background-color: rgba(13, 131, 248, 0.3);
+            width: 200px;
+            margin: auto 10px;
+            border-radius: 5px;
+        }
+
+        .radio_label {
+            margin-top: 0px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="JS/q7.js"></script>
+    <title>Bill Payment</title>
+</head>
+
+<body>
+    <div class="main_wrapper">
+        <div class="form_wrapper">
+            <div class="icon">
+                <span id="K">K</span><span id="M">M</span>
+                <span id="f">B</span><span id="o">i</span><span id="r">l</span><span id="m">l</span>
+            </div>
+            <div>
+                <p><sup><strong><span id="asterisk" title="required" aria-label="required"
+                                style="color: red;">*</span></strong></sup> marked fields are mandatory.</p>
+            </div>
+            <form id="first_form" method="post" novalidate>
+                <section id="login_details">
+                    <ul>
+                        <li>
+                            <fieldset>
+                                <legend>Pay Bill</legend>
+                                <ul>
+                                    <li class="radio_button">
+                                        <input type="radio" id="radio_now" name="pay" value="now" onclick="enterDate(value)"><label
+                                            class="radio_label" for="radio_now" >Now</label>
+                                    </li>
+                                    <li class="radio_button">
+                                        <input type="radio" id="radio_later" name="pay" value="later"
+                                            onclick="enterDate(value)"><label for="radio_later"
+                                            class="radio_label">Later</label>
+                                    </li>
+                                </ul>
+                            </fieldset>
+                        </li>
+                        <li>
+                            <p id="optioanlDisplay">
+                                <label id="inputDateLabel" for="inputDate">
+                                    <sup><strong><span id="asterisk" aria-label="required"
+                                                style="color: red;">*</span></strong></sup>
+                                    <span>Date of Payment : </span>
+                                </label>
+                                <input id="inputDate" type="date" placeholder="DD/MM/YYYY" name="dateOfPayment"
+                                    required="true" onkeyup="validateDate;" />
+                                <p class="error" id="error_Date" aria-live="polite"></p>
+                            </p>
+                        </li>
+                    </ul>
+                    <div class="button">
+                        <button type="submit">Submit</button>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
