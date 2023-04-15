@@ -3,42 +3,174 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="CSS/q23.css">
+
 </head>
 <body>
 
-<h2>Clickable Dropdown</h2>
-<p>Click on the button to open the dropdown menu.</p>
+  
+  <div class="container">
+    <h2 style="text-align: center;">District Information</h2>
+    <div class="row">
+      <div class="col-25">
+        <label for="statesDropdownBtn" style="font-size: 18px;">Select State from the dropdown : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="statesDropdownBtn" onclick="document.getElementById('statesDropdown').classList.toggle('show');" class="dropbtn">Select State</button>
+            <div id="statesDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
 
-<div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <form action="q23.jsp" method="post">
-        <button class="dropdown-button" type="submit" name="deptname" value=""></button>
-    </form>
-  </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="districtsDropdownBtn" style="font-size: 18px;">Select district from the dropdown : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="districtsDropdownBtn" onclick="document.getElementById('districtsDropdown').classList.toggle('show');" class="dropbtn">Select District</button>
+            <div id="districtsDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="district-description"></div>
 </div>
 
-<script>
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
+<script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+      
+    }
+    
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
       }
     }
-  }
-}
-</script>
-
+    </script>
+    
+    <script>
+        onload = function(){
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "scripts/q23_getStates.jsp");
+          xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var states = JSON.parse(this.responseText)["states"];
+              var output = document.getElementById("statesDropdown");
+              output.innerHTML = "";
+              for (index in states) {
+                var buttonElement = document.createElement("button");
+                buttonElement.setAttribute("class", "dropdown-button");
+                buttonElement.setAttribute("type", "button");
+                buttonElement.setAttribute("name", "state");
+                buttonElement.setAttribute("value", states[index]["stateID"]);
+                buttonElement.setAttribute("onclick", "selectedState(this.textContent, this.value)");
+                buttonElement.textContent = states[index]["stateName"];
+                output.appendChild(buttonElement);
+              }
+            }
+          };
+          xhr.send();
+        }
+    
+        function selectedState(stateName, stateID){
+            document.getElementById("statesDropdownBtn").textContent = stateName;
+            document.getElementById("districtsDropdownBtn").textContent = "Select District";
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `scripts/q23_getDistricts.jsp?state=${stateID}`);
+            xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var districts = JSON.parse(this.responseText)["districts"];
+              var output = document.getElementById("districtsDropdown");
+              output.innerHTML = "";
+              for (index in districts) {
+                var buttonElement = document.createElement("button");
+                buttonElement.setAttribute("class", "dropdown-button");
+                buttonElement.setAttribute("type", "button");
+                buttonElement.setAttribute("name", "district");
+                buttonElement.setAttribute("value", districts[index]["districtID"]);
+                buttonElement.setAttribute("onclick", "selectedDistrict(this.textContent, this.value)");
+                buttonElement.textContent = districts[index]["districtName"];
+                output.appendChild(buttonElement);
+              }
+            }
+          };
+          xhr.send();
+        }
+    
+        function selectedDistrict(districtName, districtID){
+            document.getElementById("districtsDropdownBtn").textContent = districtName;
+            const stateName = document.getElementById("statesDropdownBtn").textContent;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `scripts/q23_getDistrictInfo.jsp?district=${districtID}`);
+            xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var districtInfo = JSON.parse(this.responseText)["districtInfo"];
+              var output = document.getElementById("district-description");
+              output.innerHTML = "";
+                showInfo(stateName,districtName,districtInfo);
+            }
+          };
+          xhr.send();
+        }
+    
+        function showInfo(stateName,districtName, districtInfo) {
+        const district_description = document.querySelector("#district-description");
+        while (district_description.firstChild)
+            district_description.removeChild(district_description.firstChild);
+        district_description.classList.remove("active");
+    
+        
+        // const district = document.querySelector("#district-selection-dropdown .button_dropdown").value;
+        // if (state == "Choose State" || district == "Choose District") {
+        //     const error = document.createElement("p");
+        //     error.setAttribute("class", "error");
+        //     error.innerHTML = "You must choose both State and District to see the Information...";
+        //     district_description.appendChild(error);
+        //     return;
+        // }
+    
+        district_description.classList.add("active");
+    
+        const heading = document.createElement("p");
+        const ul = document.createElement("ul");
+    
+        heading.setAttribute("class", "heading");
+        ul.setAttribute("class", "info-list");
+        heading.appendChild(document.createTextNode(`State : ${stateName}, District : ${districtName}`));
+        var i = 1;
+        const info_wrapper = document.createElement("li");
+        const bullet = document.createElement("div");
+        const info_name = document.createElement("div");
+    
+        info_wrapper.setAttribute("class", "info-wrapper");
+        bullet.setAttribute("class", "bullet");
+        info_name.setAttribute("class", "info");
+    
+        bullet.innerHTML = i;
+        info_name.innerText = districtInfo;
+    
+        info_wrapper.appendChild(bullet);
+        info_wrapper.appendChild(info_name);
+        ul.appendChild(info_wrapper);
+    
+        district_description.appendChild(heading);
+        district_description.appendChild(ul);
+    }
+    </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
     background-color: rgba(184, 205, 225, 1);
     color: black;
     padding: 10px;
-    width: 160px;
+    min-width: 160px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
@@ -24,7 +24,8 @@
     position: absolute;
     background-color: rgba(184, 205, 225, 1);
     min-width: 160px;
-    overflow: auto;
+    max-height: 450px;
+    overflow: scroll;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 5px;
@@ -34,7 +35,7 @@
 
   .dropdown-button{
     width: 147px;
-    height: 50px;
+    min-height: 30px;
     order: none;
     border-radius: 5px;
     padding: 5px;
@@ -55,3 +56,99 @@
 .show {
     display: block;
 }
+
+#district-description.active {
+    min-width: 432px;
+    max-width: 536px;
+    background-color: rgb(253, 244, 220);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 20px;
+    box-sizing: border-box;
+}
+
+.info-wrapper {
+    height: fit-content;
+    margin: 20px;
+    display: grid;
+    grid-template-columns: 5ch auto;
+    max-width: inherit;
+    padding: 0;
+}
+
+.bullet {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+
+    background: rgba(215, 197, 149, 0.5);
+    border: 2px solid rgb(102, 102, 102);
+    color: rgb(102, 102, 102);
+    text-align: center;
+    box-sizing: content-box;
+    font: 19px Arial, sans-serif;
+}
+
+.info {
+    padding: 5px 5px 5px 20px;
+    text-align: left;
+    background-color: rgba(215, 197, 149, 0.5);
+    border-radius: 8px;
+    font-size: 20;
+    display: inline;
+    color: rgb(102, 102, 102);
+}
+.info-list{
+    padding: 0;
+}
+
+
+
+
+* {
+    box-sizing: border-box;
+  }
+  
+  
+  label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+  }
+  
+  
+  .container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 40%;
+    margin: auto;
+  }
+  
+  .col-25 {
+    float: left;
+    width: 50%;
+    margin-top: 6px;
+  }
+  
+  .col-75 {
+    float: left;
+    width: 50%;
+    overflow: visible;
+    margin-top: 6px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .col-25, .col-75{
+      width: 100%;
+      margin-top: 0;
+    }
+  }
