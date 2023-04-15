@@ -51,4 +51,7 @@
     <question no="q23" link="q23.html" image="q23.png">
         Write a web page that contains two drop-down lists captioned states and districts(initially empty). The first one contains the names of states in India. When a specific state is selected, the second one should be populated by the values obtained from server using AJAX technology. Create suitable tables in the database. When a specific state and district is selected, get the information using AJAX and show it.
     </question>
+    <question no="q24" link="q24.html" image="q24.png">
+        Design a simple login page. Use AJAX technology to print appropriate error message in case of a login failure.
+    </question>
 </assignments>

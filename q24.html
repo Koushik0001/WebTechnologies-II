@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="CSS/q24.css" />
+</head>
+
+<body>
+    <div style="display: flex;flex-direction: column; align-items: center;">
+        <h2>Click the button to Login</h2>
+        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+    </div>
+
+    <div id="id01" class="modal">
+
+        <form id="login-form" class="modal-content animate" onsubmit="authenticate(event)">
+            <div class="imgcontainer">
+                <span onclick="cancelBtnClick()" class="close"
+                    title="Close Modal">&times;</span>
+                <img src="Images/img_avatar.png" alt="Avatar" class="avatar">
+            </div>
+            <p class="infolabel" id="info_updatePopup" aria-live="polite" style="text-align: center;"></p>
+            <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input id="user" type="text" placeholder="Enter Username" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input id="pass" type="password" placeholder="Enter Password" required>
+
+                <button type="submit">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="cancelBtnClick()" class="cancelbtn">Cancel</button>
+                <span class="psw"><a href="q22.html">Create an Account</a></span>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        function authenticate(event) {
+            event.preventDefault();
+
+            var user = document.getElementById("user").value;
+            var pass = document.getElementById("pass").value;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var status = JSON.parse(this.responseText)["status"];
+                    if (status === "ok") {
+                        window.location = "q24_loggedin.html";
+                    }
+                    else {
+                        document.getElementById("info_updatePopup").innerHTML = "<span class='error' aria-live='polite'>Incorrect username or password</span>"
+                        document.getElementById("user").focus();
+                        shakeInput();
+                    }
+                }
+            };
+            xhttp.open("POST", "scripts/q24_checkLogin.jsp", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`user=${user}&pass=${pass}`);
+        }
+
+        function cancelBtnClick(){
+            document.getElementById('id01').style.display='none'; 
+            document.getElementById('login-form').reset();
+            document.getElementById('info_updatePopup').innerHTML='';
+        }
+    </script>
+    <script>
+        function shakeInput() {
+            const inputField1 = document.getElementById('user');
+            const inputField2 = document.getElementById('pass');
+            inputField1.classList.add('shake-animation');
+            inputField2.classList.add('shake-animation');
+
+            setTimeout(function () {
+                inputField1.classList.remove('shake-animation');
+                inputField2.classList.remove('shake-animation');
+            }, 450);
+        }
+
+    </script>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+            style="text-decoration: none;">#Go Back to Main menu</a></div>
+</body>
+
+</html>
