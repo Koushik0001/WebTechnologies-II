@@ -50,7 +50,11 @@ img.avatar {
 .container {
     padding: 16px;
 }
-
+#login-footer{
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+}
 span.psw {
     float: right;
     padding-top: 16px;
