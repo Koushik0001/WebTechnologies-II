@@ -38,7 +38,9 @@
 
     <div class="row">
       <div id="district-description"></div>
+    </div>
 </div>
+
 
 
 <script>
@@ -134,16 +136,6 @@
             district_description.removeChild(district_description.firstChild);
         district_description.classList.remove("active");
     
-        
-        // const district = document.querySelector("#district-selection-dropdown .button_dropdown").value;
-        // if (state == "Choose State" || district == "Choose District") {
-        //     const error = document.createElement("p");
-        //     error.setAttribute("class", "error");
-        //     error.innerHTML = "You must choose both State and District to see the Information...";
-        //     district_description.appendChild(error);
-        //     return;
-        // }
-    
         district_description.classList.add("active");
     
         const heading = document.createElement("p");
@@ -172,5 +164,7 @@
         district_description.appendChild(ul);
     }
     </script>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+      style="text-decoration: none;">#Go Back to Main menu</a></div>
 </body>
 </html>

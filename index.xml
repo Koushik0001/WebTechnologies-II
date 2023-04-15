@@ -48,4 +48,7 @@
     <question no="q22" link="q22.html" image="q22.png">
         Design a simple page to open an account. The page should contain one text box for login name, one password box and other information. Use AJAX technology to inform if the login name typed is available or not. Write a target JSP page to insert data supplied in the form into the database.
     </question>
+    <question no="q23" link="q23.html" image="q23.png">
+        Write a web page that contains two drop-down lists captioned states and districts(initially empty). The first one contains the names of states in India. When a specific state is selected, the second one should be populated by the values obtained from server using AJAX technology. Create suitable tables in the database. When a specific state and district is selected, get the information using AJAX and show it.
+    </question>
 </assignments>
