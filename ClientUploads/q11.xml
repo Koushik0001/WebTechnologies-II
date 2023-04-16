@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ASCII" standalone="yes"?>
+
+<!DOCTYPE question-paper[
+    <!ELEMENT question-paper (question*)>
+    <!ELEMENT question (text, optionA, optionB, optionC, optionD, answer)>
+    <!ELEMENT text (#PCDATA)>
+    <!ELEMENT optionA (#PCDATA)>
+    <!ELEMENT optionB (#PCDATA)>
+    <!ELEMENT optionC (#PCDATA)>
+    <!ELEMENT optionD (#PCDATA)>
+    <!ELEMENT answer (#PCDATA)>
+
+    <!ATTLIST question no CDATA #REQUIRED>
+    <!ATTLIST answer value (optionA|optionB|optionC|optionD) #REQUIRED>
+]>
+
+<question-paper>
+    <question no="1">
+        <text>(1+2) = ?</text>
+        <optionA>4</optionA>
+        <optionB>5</optionB>
+        <optionC>3</optionC>
+        <optionD>9</optionD>
+        <answer value="optionA"></answer>
+    </question>
+    <question no="2">
+        <text>(5+4)/3 = ?</text>
+        <optionA>3</optionA>
+        <optionB>2</optionB>
+        <optionC>1</optionC>
+        <optionD>9</optionD>
+        <answer value="optionA"></answer>
+    </question>
+</question-paper>
