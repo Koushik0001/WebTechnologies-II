@@ -1,0 +1,1 @@
+<%response.sendRedirect("q32.html");%>

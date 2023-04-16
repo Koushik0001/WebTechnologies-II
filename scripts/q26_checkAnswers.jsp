@@ -2,7 +2,7 @@
 
 <%!
         static Connection connection;
-        static PreparedStatement getQuestionsQuery;
+        static PreparedStatement getAnswerQuery;
         private static void connect(HttpSession session, String server, String port, String databaseName, String user, String pass) throws IOException, SQLException {
 
             new com.mysql.jdbc.Driver();
@@ -21,13 +21,15 @@
 
                 connection = DriverManager.getConnection(url, info);
                 if (connection != null) {
-                    String query1 = "SELECT no, question, optionA, optionB, optionC, optionD FROM questions;";
-                    getQuestionsQuery = connection.prepareStatement(query1);
+                    String query1 = "SELECT answer FROM questions WHERE no=?";
+                    getAnswerQuery = connection.prepareStatement(query1);
                 }
         }
-        private static ResultSet getQuestions() throws SQLException, Exception {
-            ResultSet rs = getQuestionsQuery.executeQuery();
-            return rs;
+        private static String getAnswer(int no) throws SQLException, Exception {
+            getAnswerQuery.setInt(1,no);
+            ResultSet rs = getAnswerQuery.executeQuery();
+            rs.next();
+            return rs.getString("answer");
         }
 %>
 <%
@@ -36,6 +38,7 @@
     String databaseName =  "test";
     String user = "user";
     String pass = "user1234";
+    int numberOfQuestions = Integer.parseInt(request.getParameter("numberOfQuestions"));
 
     try {
         connect(session ,server, port, databaseName, user, pass);
@@ -46,11 +49,13 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="CSS/q23.css" />
+<link rel="stylesheet" href="../CSS/q23.css" />
 <style>
     .btn-container{
         padding: 15px;
         margin: 10px;
+        display: flex;
+    justify-content: space-between;
     }
     .col-25{
         width:100%;
@@ -60,42 +65,34 @@
 <body>
   
 <div class="container">
-    <h2 style="text-align: center;">Question Paper</h2>
-    <form action="scripts/q26_checkAnswers.jsp" method="POST">
+    <h2 style="text-align: center;">Result</h2>
     <%
-    ResultSet rs = getQuestions();
-    int i=0;
-    while(rs.next()){
+    for(int i=1; i<=numberOfQuestions; i++){
         %>
-        <div class="row">
+        <div class="row" style="text-align: center">
             <div class="col-25">
-                <p>
-                    <%=rs.getInt("no")%>. <%=rs.getString("question")%>
-                </p>
-                <input type="radio" name="answer<%=rs.getInt("no")%>" value="optionA" required/>
-                <label><%=rs.getString("optionA")%></label>
-                <br/>
-                <input type="radio" name="answer<%=rs.getInt("no")%>" value="optionB"/>
-                <label><%=rs.getString("optionB")%></label>
-                <br/>
-                <input type="radio" name="answer<%=rs.getInt("no")%>" value="optionC"/>
-                <label><%=rs.getString("optionC")%></label>
-                <br/>
-                <input type="radio" name="answer<%=rs.getInt("no")%>" value="optionD"/>
-                <label><%=rs.getString("optionD")%></label>
-                <br/>
+                <div>
+                    <%
+                        String answer = getAnswer(i);
+                        if(answer.trim().equals(request.getParameter("answer"+i).trim())){
+                            %>Question no. <%=i%> : <span style="color: rgb(52, 181, 13);">Correct</span> answer<%
+                        }
+                        else{
+                            %>Question no. <%=i%> : <span style="color: rgb(181, 13, 13);">Wrong</span> answer<%
+                        }
+                    %>
+                </div>
             </div>
         </div>
         <%
-        i++;
     }
     connection.close();
     %>
-    <input type="hidden" id="numberOfQuestions" name="numberOfQuestions" value="<%=i%>"/>
-    <div class="btn-container">
-        <button type="submit" style="float:right;">Submit</button>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 40px;">
+        <a href="../q26.jsp" style="text-decoration: none;">Go to Question Paper</a>
     </div>
-    </form>
+    <div class="btn-container">
+    </div>
 </div>
 
 
@@ -103,6 +100,4 @@
       style="text-decoration: none;">#Go Back to Main menu</a></div>
 </body>
 </html>
-
-
 

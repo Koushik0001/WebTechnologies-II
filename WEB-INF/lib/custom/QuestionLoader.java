@@ -36,7 +36,6 @@ public class QuestionLoader {
         
         for (int i = 0; i < questions.getLength(); i++) {
             Element question = (Element) questions.item(i);
-            String no = question.getAttribute("no");
             String text = question.getElementsByTagName("text").item(0).getTextContent();
             String optionA = question.getElementsByTagName("optionA").item(0).getTextContent();
             String optionB = question.getElementsByTagName("optionB").item(0).getTextContent();
@@ -44,16 +43,14 @@ public class QuestionLoader {
             String optionD = question.getElementsByTagName("optionD").item(0).getTextContent();
             Element answer = (Element) question.getElementsByTagName("answer").item(0);
             String value = answer.getAttribute("value");
-            String query = "INSERT INTO questions (no, question, optionA, optionB, optionC, optionD, answer) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO questions (question, optionA, optionB, optionC, optionD, answer) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, no);
-            statement.setString(2, text);
-            statement.setString(3, optionA);
-            statement.setString(4, optionB);
-            statement.setString(5, optionC);
-            statement.setString(6, optionD);
-            statement.setString(7, value);
+            statement.setString(1, text);
+            statement.setString(2, optionA);
+            statement.setString(3, optionB);
+            statement.setString(4, optionC);
+            statement.setString(5, optionD);
+            statement.setString(6, value);
             
             statement.executeUpdate();
         }

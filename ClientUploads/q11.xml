@@ -21,7 +21,7 @@
         <optionB>5</optionB>
         <optionC>3</optionC>
         <optionD>9</optionD>
-        <answer value="optionA"></answer>
+        <answer value="optionC"></answer>
     </question>
     <question no="2">
         <text>(5+4)/3 = ?</text>

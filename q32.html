@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="CSS/q22.css">
+</head>
+<style>
+    .shake-animation {
+        animation: shake 0.3s cubic-bezier(.36, .07, .19, .97) infinite;
+    }
+
+    @keyframes shake {
+
+        10%,
+        90% {
+            transform: translate3d(-1px, 0, 0);
+        }
+
+        20%,
+        80% {
+            transform: translate3d(2px, 0, 0);
+        }
+
+        30%,
+        50%,
+        70% {
+            transform: translate3d(-4px, 0, 0);
+        }
+
+        40%,
+        60% {
+            transform: translate3d(4px, 0, 0);
+        }
+    }
+</style>
+
+<body>
+
+
+    <div style="display: flex;flex-direction: column; align-items: center;">
+        <h2>Click the button to open an account</h2>
+        <button onclick="displayForm()" style="width:auto;">Open Account</button>
+    </div>
+
+
+    <div id="id01" class="modal">
+
+        <form id="accountForm" class="modal-content animate" onsubmit="addAccount(event)">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                    title="Close Modal">&times;</span>
+                <img src="Images/img_avatar.png" alt="Avatar" class="avatar">
+            </div>
+            <p class="infolabel" id="info_updatePopup" aria-live="polite" style="text-align: center;"></p>
+            <div class="container">
+                <label for="user"><b>Username</b></label>
+                <input id="user" type="text" placeholder="Enter Username" name="user" onkeyup="check()" required>
+
+                <label for="pass"><b>Password</b></label>
+                <input id="pass" type="password" placeholder="Enter Password" name="pass" onkeyup="checkPass()"
+                    required>
+
+                <label for="confpass"><b>Confirm Password</b></label>
+                <input id="confpass" type="password" placeholder="Retype Password" name="confpass"
+                    onkeyup="checkConfPass()" required>
+
+                <label for="name"><b>Name</b></label>
+                <input id="name" type="text" placeholder="Enter your name" name="name" required>
+
+                <label for="email"><b>Email</b></label>
+                <input id="email" type="email" placeholder="Enter Email" name="email" required>
+
+                <label for="dept"><b>Phone No.</b></label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{3}" placeholder="123-4567-456" requored>
+
+
+                <button type="submit" id="submit-btn">Confirm</button>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button"
+                    onclick="document.getElementById('id01').style.display='none';document.getElementById('accountForm').reset(); "
+                    class="cancelbtn">Cancel</button>
+                <span class="psw"><a href="q24.html">Already have an Account</a></span>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function displayForm() {
+            document.getElementById('id01').style.display = 'block';
+            parent = document.getElementById('info_updatePopup');
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        function check() {
+            if (validateUser() !== 0) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("info_updatePopup").innerHTML = this.responseText;
+                        if (document.getElementById("info_updatePopup").textContent.trim() === "Username is not available") {
+                            document.getElementById("submit-btn").disabled = true;
+                            shakeInput("user");
+                        }
+                        else {
+                            document.getElementById("submit-btn").disabled = false;
+                        }
+                    }
+                };
+                xhttp.open("GET", "scripts/q32_check_script.jsp?user=" + document.getElementById("user").value, true);
+                xhttp.send();
+            }
+        }
+        function checkPass() {
+            const pass = document.getElementById("pass").value;
+            const errorLabel = document.getElementById("info_updatePopup");
+            errorLabel.innerHTML ="";
+            document.getElementById("submit-btn").disabled = false;
+            var rexp = /(?=.*\d)(?=.*[A-Z])/
+
+            if (!(rexp.test(pass) && pass.length <= 20 && pass.length >= 6)) {
+                if (pass.length > 20 || pass.length < 6) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password must be 6 to 20 characters long</span>";
+                    if(pass.length >20){
+                        shakeInput("pass");
+                    }
+                }
+                else if (!rexp.test(pass)) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password must contain atleast one uppercase letter and a number</span>"
+                    if(pass.length >20){
+                        shakeInput("pass");
+                    }
+                }
+                document.getElementById("submit-btn").disabled = true;
+                
+                document.getElementById("pass").focus();
+                return 0;
+            }
+            return 1;
+        }
+        function checkConfPass(){
+            const pass = document.getElementById("pass").value;
+            const confpass = document.getElementById("confpass").value;
+            const errorLabel = document.getElementById("info_updatePopup");
+            errorLabel.innerHTML ="";
+            document.getElementById("submit-btn").disabled = false;
+            if (pass !== confpass) {
+                errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password and Confirm Password fields are not same</span>";
+                document.getElementById("submit-btn").disabled = true;
+                if(confpass.length >20){
+                        shakeInput("confpass");
+                    }
+                document.getElementById("confpass").focus();
+                return 0;
+            }
+            return 1;
+        }
+        function addAccount(event) {
+            event.preventDefault();
+            if (validatePassword() !== 0) {
+                var user = document.getElementById("user").value;
+                var pass = document.getElementById("pass").value;
+                var email = document.getElementById("email").value;
+                var phone = document.getElementById("phone").value;
+                var name = document.getElementById("name").value;
+
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("info_updatePopup").innerHTML = this.responseText;
+                    }
+                };
+                xhttp.open("POST", "scripts/q32_addAccount_script.jsp", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(`user=${user}&pass=${pass}&name=${name}&email=${email}&phone=${phone}`);
+                document.getElementById("accountForm").reset();
+            }
+        }
+    </script>
+    <script>
+        async function shakeInput(elementname) {
+            const inputField = document.getElementById(elementname);
+            inputField.classList.add('shake-animation');
+
+            setTimeout(function () {
+                inputField.classList.remove('shake-animation');
+            }, 450);
+        }
+
+    </script>
+
+    <script>
+
+        function validateUser() {
+            const user = document.getElementById("user").value;
+            const errorLabel = document.getElementById("info_updatePopup");
+
+            var rexp = /^[a-zA-Z0-9_]+$/
+            if (!(rexp.test(user) && user.length <= 20)) {
+                if (!rexp.test(user)) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Only alpha-numeric characters and underscores are allowed in username</span>";
+                }
+                if (user.length > 20) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Number of characters must be less than or equal to 20</span>";
+                }
+                document.getElementById("submit-btn").disabled = true;
+                shakeInput("user");
+                document.getElementById("user").focus();
+                return 0;
+            }
+            document.getElementById("submit-btn").disabled = false;
+            return 1;
+        }
+
+        function validatePassword() {
+            const pass = document.getElementById("pass").value;
+            const confpass = document.getElementById("confpass").value;
+            const errorLabel = document.getElementById("info_updatePopup");
+            document.getElementById("submit-btn").disabled = false;
+            var rexp = /(?=.*\d)(?=.*[A-Z])/
+
+            if (!(rexp.test(pass) && pass.length <= 20 && pass.length >= 6)) {
+                if (pass.length > 10 || pass.length < 6) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password must be 6 to 20 characters long</span>";
+                }
+                else if (!rexp.test(pass)) {
+                    errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password must contain atleast one uppercase letter and a number</span>"
+                }
+                document.getElementById("submit-btn").disabled = true;
+                shakeInput("pass");
+                shakeInput("confpass");
+                document.getElementById("pass").focus();
+                return 0;
+            }
+            if (pass !== confpass) {
+                errorLabel.innerHTML = "<span class='error' aria-live='polite' >Password and Confirm Password fields are not same</span>";
+                document.getElementById("submit-btn").disabled = true;
+                shakeInput("pass");
+                shakeInput("confpass");
+                document.getElementById("confpass").focus();
+                return 0;
+            }
+            return 1;
+        }
+
+    </script>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+            style="text-decoration: none;">#Go Back to Main menu</a></div>
+</body>
+
+</html>

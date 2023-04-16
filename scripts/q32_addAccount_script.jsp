@@ -21,15 +21,16 @@
 
                 connection = DriverManager.getConnection(url, info);
                 if (connection != null) {
-                    String insert = "INSERT INTO accounts VALUES(?, ?, ?, ?)";
+                    String insert = "INSERT INTO accounts VALUES(?, ?, ?, ?, ?)";
                     insertStatement = connection.prepareStatement(insert);
                 }
         }
-        private static void insertAccount(String user, String pass, String email, String dept) throws SQLException {
+        private static void insertAccount(String user, String pass, String name, String email, String phone) throws SQLException {
             insertStatement.setString(1, user);
             insertStatement.setString(2, pass);
-            insertStatement.setString(3, email);
-            insertStatement.setString(4, dept);
+            insertStatement.setString(3, name);
+            insertStatement.setString(4, email);
+            insertStatement.setString(5, phone);
             
             int count = insertStatement.executeUpdate();
         }
@@ -44,13 +45,14 @@
     String user = request.getParameter("user");
     String pass = request.getParameter("pass");
     String email = request.getParameter("email");
-    String dept = request.getParameter("dept");
+    String name = request.getParameter("name");
+    String phone = request.getParameter("phone");
     
         try {
             connect(session ,server, port, databaseName, dbuser, dbpass);
 
-        if(user!=null && pass!=null && email!=null && dept!=null){
-            insertAccount(user, pass, email, dept);
+        if(user!=null && pass!=null && email!=null && name!=null && phone!=null){
+            insertAccount(user, pass, name, email, phone);
             %>
                 <span class="error" aria-live="polite" style="color: rgb(52, 181, 13);">Account successfully added</span>
             <%

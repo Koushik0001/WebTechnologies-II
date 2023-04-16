@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="CSS/q23.css">
+
+</head>
+<body>
+
+  
+<div class="container">
+    <h2 style="text-align: center;">Select HDD</h2>
+    <div class="row">
+      <div class="col-25">
+        <label for="hddManufacturerDropdownBtn" style="font-size: 18px;">Select Manufacturer : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="hddManufacturerDropdownBtn" onclick="document.getElementById('hddManufacturerDropdown').classList.toggle('show');" class="dropbtn">Select Manufacturer</button>
+            <div id="hddManufacturerDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="hddModelDropdownBtn" style="font-size: 18px;">Select Model : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="hddModelDropdownBtn" onclick="document.getElementById('hddModelDropdown').classList.toggle('show');" class="dropbtn">Select Model</button>
+            <div id="hddModelDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="hddPrice"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 style="text-align: center;">Select Processor</h2>
+    <div class="row">
+      <div class="col-25">
+        <label for="processorManufacturerDropdownBtn" style="font-size: 18px;">Select Manufacturer : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="processorManufacturerDropdownBtn" onclick="document.getElementById('processorManufacturerDropdown').classList.toggle('show');" class="dropbtn">Select Manufacturer</button>
+            <div id="processorManufacturerDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="processorModelDropdownBtn" style="font-size: 18px;">Select Model : </label>
+      </div>
+      <div class="col-75">
+        <div class="dropdown">
+            <button id="processorModelDropdownBtn" onclick="document.getElementById('hddModelDropdown').classList.toggle('show');" class="dropbtn">Select Model</button>
+            <div id="processorModelDropdown" class="dropdown-content">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="hddPrice"></div>
+    </div>
+</div>
+
+
+
+<script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+      
+    }
+    
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    </script>
+    
+    <script>
+        onload = function(){
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "scripts/q23_gethdd.jsp");
+          xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var hdd = JSON.parse(this.responseText)["hdd"];
+              var output = document.getElementById("hddDropdown");
+              output.innerHTML = "";
+              for (index in hdd) {
+                var buttonElement = document.createElement("button");
+                buttonElement.setAttribute("class", "dropdown-button");
+                buttonElement.setAttribute("type", "button");
+                buttonElement.setAttribute("name", "state");
+                buttonElement.setAttribute("value", hdd[index]["stateID"]);
+                buttonElement.setAttribute("onclick", "selectedState(this.textContent, this.value)");
+                buttonElement.textContent = hdd[index]["stateName"];
+                output.appendChild(buttonElement);
+              }
+            }
+          };
+          xhr.send();
+        }
+    
+        function selectedState(stateName, stateID){
+            document.getElementById("hddDropdownBtn").textContent = stateName;
+            document.getElementById("districtsDropdownBtn").textContent = "Select District";
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `scripts/q23_getDistricts.jsp?state=${stateID}`);
+            xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var districts = JSON.parse(this.responseText)["districts"];
+              var output = document.getElementById("districtsDropdown");
+              output.innerHTML = "";
+              for (index in districts) {
+                var buttonElement = document.createElement("button");
+                buttonElement.setAttribute("class", "dropdown-button");
+                buttonElement.setAttribute("type", "button");
+                buttonElement.setAttribute("name", "district");
+                buttonElement.setAttribute("value", districts[index]["districtID"]);
+                buttonElement.setAttribute("onclick", "selectedDistrict(this.textContent, this.value)");
+                buttonElement.textContent = districts[index]["districtName"];
+                output.appendChild(buttonElement);
+              }
+            }
+          };
+          xhr.send();
+        }
+    
+        function selectedDistrict(districtName, districtID){
+            document.getElementById("districtsDropdownBtn").textContent = districtName;
+            const stateName = document.getElementById("hddDropdownBtn").textContent;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `scripts/q23_getDistrictInfo.jsp?district=${districtID}`);
+            xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              var districtInfo = JSON.parse(this.responseText)["districtInfo"];
+              var output = document.getElementById("district-description");
+              output.innerHTML = "";
+                showInfo(stateName,districtName,districtInfo);
+            }
+          };
+          xhr.send();
+        }
+    
+        function showInfo(stateName,districtName, districtInfo) {
+        const district_description = document.querySelector("#district-description");
+        while (district_description.firstChild)
+            district_description.removeChild(district_description.firstChild);
+        district_description.classList.remove("active");
+    
+        district_description.classList.add("active");
+    
+        const heading = document.createElement("p");
+        const ul = document.createElement("ul");
+    
+        heading.setAttribute("class", "heading");
+        ul.setAttribute("class", "info-list");
+        heading.appendChild(document.createTextNode(`State : ${stateName}, District : ${districtName}`));
+        var i = 1;
+        const info_wrapper = document.createElement("li");
+        const bullet = document.createElement("div");
+        const info_name = document.createElement("div");
+    
+        info_wrapper.setAttribute("class", "info-wrapper");
+        bullet.setAttribute("class", "bullet");
+        info_name.setAttribute("class", "info");
+    
+        bullet.innerHTML = i;
+        info_name.innerText = districtInfo;
+    
+        info_wrapper.appendChild(bullet);
+        info_wrapper.appendChild(info_name);
+        ul.appendChild(info_wrapper);
+    
+        district_description.appendChild(heading);
+        district_description.appendChild(ul);
+    }
+    </script>
+    <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
+      style="text-decoration: none;">#Go Back to Main menu</a></div>
+</body>
+</html>
