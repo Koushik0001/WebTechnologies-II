@@ -4,8 +4,6 @@
         static Connection connection;
         static PreparedStatement getAllTypesQuery;
         static PreparedStatement getManufacturersQuery;
-        static PreparedStatement getModelsQuery;
-        static PreparedStatement getPriceQuery;
         private static void connect(HttpSession session, String server, String port, String databaseName, String user, String pass) throws IOException, SQLException {
 
             new com.mysql.jdbc.Driver();
@@ -26,13 +24,9 @@
                 if (connection != null) {
                     String query1 = "SELECT DISTINCT type FROM components";
                     String query2 = "SELECT DISTINCT manufacturer FROM components where type=?;";
-                    String query3 = "SELECT model FROM components WHERE type=? and manufacturer=?";
-                    String query4 = "SELECT price FROM components where type=? and manufacturer=? and model=?";
 
-                    getAllTypesQuery = connection.prepareStatement(query1);
+                    getAllTypesQuery = connection.prepareStatement(query1, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     getManufacturersQuery = connection.prepareStatement(query2);
-                    getModelsQuery = connection.prepareStatement(query3);
-                    getPriceQuery = connection.prepareStatement(query4);
                 }
         }
         private static ResultSet getAllTypes() throws SQLException, Exception {
@@ -43,20 +37,6 @@
             getManufacturersQuery.setString(1, type);
             ResultSet rs = getManufacturersQuery.executeQuery();
             return rs;
-        }
-        private static ResultSet getModels(String type, String manufacturer) throws SQLException, Exception {
-            getModelsQuery.setString(1, type);
-            getModelsQuery.setString(2, manufacturer);
-            ResultSet rs = getModelsQuery.executeQuery();
-            return rs;
-        }
-        private static int getPrice(String type, String manufacturer, String model) throws SQLException, Exception {
-            getPriceQuery.setString(1, type);
-            getPriceQuery.setString(2, manufacturer);
-            getPriceQuery.setString(3, model);
-            ResultSet rs = getPriceQuery.executeQuery();
-            rs.next();
-            return rs.getInt("price");
         }
 %>
 <%
@@ -79,24 +59,74 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="CSS/q23.css">
+<style>
+    .price{
+        margin: 20px auto 0 auto;
+        background-color: rgba(32, 170, 4, 0.296);
+        border-radius: 5px;
+        min-width: 66px;
+        height: 46px;
+        padding: 14px;
+        text-align: center;
+        font-family: monospace;
+        font-size: 18px;
+    }
+    .row.error{
+        text-align: center; margin:10px auto 20px auto
+    }
+    #submitBtn {
+        border: 2px solid black;
+        background-color: white;
+        color: black;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        border-color: #04AA6D;
+        color: green;
+        border-radius:5px;
+    }
 
+    /* Green */
+    .success {
+    
+    }
+
+    #submitBtn:hover {
+    background-color: #04AA6D;
+    color: white;
+    }
+    form{
+        display: none;
+    }
+</style>
 </head>
 <body>
-
 <%
     ResultSet rsTypes = getAllTypes();
+    %><form><%
+    while(rsTypes.next()){
+        String type = rsTypes.getString("type");
+        %>
+            <input type="text" name="<%=type%>_manufacturer" value=""/>
+            <input type="text" name="<%=type%>_model" value=""/>
+            <input type="text" name="<%=type%>_price" value=""/>
+        <%
+    }
+    %></form><%
+    rsTypes.beforeFirst();
     while(rsTypes.next()){
         String type = rsTypes.getString("type");
         %>
         <div class="container">
             <h2 style="text-align: center;">Select <%=type%></h2>
+            <div class="row" id="<%=type%>ErrorLabel"></div>
             <div class="row">
                 <div class="col-25">
                     <label for="<%=type%>ManufacturerDropdownBtn" style="font-size: 18px;">Select Manufacturer : </label>
                 </div>
                 <div class="col-75">
                     <div class="dropdown">
-                        <button id="<%=type%>ManufacturerDropdownBtn" onclick="document.getElementById('<%=type%>ManufacturerDropdown').classList.toggle('show');" class="dropbtn">Select Manufacturer</button>
+                        <button id="<%=type%>ManufacturerDropdownBtn" onclick="dropDownHandler('<%=type%>ManufacturerDropdown');" class="dropbtn">Select Manufacturer</button>
                         <div id="<%=type%>ManufacturerDropdown" class="dropdown-content">
                         <%
                             ResultSet rsManufacturers = getManufacturers(type);
@@ -120,7 +150,7 @@
             </div>
             <div class="col-75">
                 <div class="dropdown">
-                    <button id="<%=type%>ModelDropdownBtn" onclick="document.getElementById('<%=type%>ModelDropdown').classList.toggle('show');" class="dropbtn">Select Model</button>
+                    <button id="<%=type%>ModelDropdownBtn" onclick="dropDownHandler('<%=type%>ModelDropdown');modelDropDownHandler('<%=type%>')" class="dropbtn">Select Model</button>
                     <div id="<%=type%>ModelDropdown" class="dropdown-content">
                     </div>
                 </div>
@@ -128,17 +158,38 @@
             </div>
 
             <div class="row">
-            <div id="<%=type%>Price"></div>
+                <div class="col-25"></div>
+                <div id="<%=type%>Price" class="col-75"></div>
             </div>
         </div>
+        
     <%}
 %>
-
+        <div class="row">
+                <div class="col-25"></div>
+                <div class="col-75"><button id="submitBtn" onclick="submitClicked()">Get the total price</button></div>
+            </div>
 <script>
-    /* When the user clicks on the button, 
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-      
+    
+    function dropDownHandler(elementId){
+        const elements = document.querySelectorAll('.show');
+        const e = document.getElementById(elementId);
+        elements.forEach(element => {
+            if(e != element )
+                element.classList.remove('show');
+        });
+        e.classList.toggle('show');
+    }
+    function modelDropDownHandler(type){
+        if(document.getElementById(type+"ManufacturerDropdownBtn").textContent.split(" ")[0] == "Select"){
+            document.getElementById(type+"ErrorLabel").textContent = "Select a manufacturer first";
+            document.getElementById(type+"ErrorLabel").classList.add("error");
+        }
+        else{
+            document.getElementById(type+"ErrorLabel").textContent = "";
+            if(document.getElementById(type+"ErrorLabel").classList.contains("error"))
+                document.getElementById(type+"ErrorLabel").classList.remove("error");
+        }
     }
     
     // Close the dropdown if the user clicks outside of it
@@ -157,103 +208,53 @@
     </script>
     
     <script>
-        // onload = function(){
-        //   var xhr = new XMLHttpRequest();
-        //   xhr.open("GET", "scripts/q23_gethdd.jsp");
-        //   xhr.onreadystatechange = function() {
-        //     if (this.readyState === 4 && this.status === 200) {
-        //       var hdd = JSON.parse(this.responseText)["hdd"];
-        //       var output = document.getElementById("hddDropdown");
-        //       output.innerHTML = "";
-        //       for (index in hdd) {
-        //         var buttonElement = document.createElement("button");
-        //         buttonElement.setAttribute("class", "dropdown-button");
-        //         buttonElement.setAttribute("type", "button");
-        //         buttonElement.setAttribute("name", "state");
-        //         buttonElement.setAttribute("value", hdd[index]["stateID"]);
-        //         buttonElement.setAttribute("onclick", "selectedState(this.textContent, this.value)");
-        //         buttonElement.textContent = hdd[index]["stateName"];
-        //         output.appendChild(buttonElement);
-        //       }
-        //     }
-        //   };
-        //   xhr.send();
-        // }
-    
-        function selectedManufacturerDropdown(type, selectedValue){
-            document.getElementById(type+"ManufacturerDropdownBtn").textContent = selectedValue;
+        function selectedManufacturerDropdown(type, selectedManufaturer){
+            document.getElementById(type+"ErrorLabel").textContent = "";
+            if(document.getElementById(type+"ErrorLabel").classList.contains("error"))
+                document.getElementById(type+"ErrorLabel").classList.remove("error");
+            document.getElementById(type+"ManufacturerDropdownBtn").textContent = selectedManufaturer;
             document.getElementById(type+"ModelDropdownBtn").textContent = "Select Model";
+            document.getElementById(type+"Price").classList.remove("price");
+            document.getElementById(type+"Price").textContent = "";
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", `scripts/q23_getDistricts.jsp?state=${stateID}`);
+            xhr.open("GET", "scripts/q30_getComponentInfo.jsp?query=model&type="+type+"&manufacturer="+selectedManufaturer);
             xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-              var districts = JSON.parse(this.responseText)["districts"];
-              var output = document.getElementById("districtsDropdown");
+              var models = JSON.parse(this.responseText)["models"];
+              var output = document.getElementById(type+"ModelDropdown");
               output.innerHTML = "";
-              for (index in districts) {
+              for (index in models) {
                 var buttonElement = document.createElement("button");
                 buttonElement.setAttribute("class", "dropdown-button");
                 buttonElement.setAttribute("type", "button");
-                buttonElement.setAttribute("name", "district");
-                buttonElement.setAttribute("value", districts[index]["districtID"]);
-                buttonElement.setAttribute("onclick", "selectedDistrict(this.textContent, this.value)");
-                buttonElement.textContent = districts[index]["districtName"];
+                buttonElement.setAttribute("name", type+"Manufacturer");
+                buttonElement.setAttribute("value", models[index]);
+                buttonElement.setAttribute("onclick", "selectedModelDropdown('"+type+"','"+selectedManufaturer+"','"+models[index]+"')");
+                buttonElement.textContent = models[index];
                 output.appendChild(buttonElement);
               }
             }
           };
           xhr.send();
         }
-    
-        function selectedDistrict(districtName, districtID){
-            document.getElementById("districtsDropdownBtn").textContent = districtName;
-            const stateName = document.getElementById("hddDropdownBtn").textContent;
+
+       
+
+    function selectedModelDropdown(type, manufacturer, model){
+            document.getElementById(type+"ModelDropdownBtn").textContent = model;
+            document.getElementById(type+"Price").textContent = "";
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", `scripts/q23_getDistrictInfo.jsp?district=${districtID}`);
+            xhr.open("GET", "scripts/q30_getComponentInfo.jsp?query=price&type="+type+"&manufacturer="+manufacturer+"&model="+model);
             xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-              var districtInfo = JSON.parse(this.responseText)["districtInfo"];
-              var output = document.getElementById("district-description");
-              output.innerHTML = "";
-                showInfo(stateName,districtName,districtInfo);
+              var price = JSON.parse(this.responseText)["price"];
+              var output = document.getElementById(type+"Price");
+              output.classList.add("price");
+              output.innerHTML = "Price : &#8377; "+price;
             }
           };
           xhr.send();
         }
-    
-        function showInfo(stateName,districtName, districtInfo) {
-        const district_description = document.querySelector("#district-description");
-        while (district_description.firstChild)
-            district_description.removeChild(district_description.firstChild);
-        district_description.classList.remove("active");
-    
-        district_description.classList.add("active");
-    
-        const heading = document.createElement("p");
-        const ul = document.createElement("ul");
-    
-        heading.setAttribute("class", "heading");
-        ul.setAttribute("class", "info-list");
-        heading.appendChild(document.createTextNode(`State : ${stateName}, District : ${districtName}`));
-        var i = 1;
-        const info_wrapper = document.createElement("li");
-        const bullet = document.createElement("div");
-        const info_name = document.createElement("div");
-    
-        info_wrapper.setAttribute("class", "info-wrapper");
-        bullet.setAttribute("class", "bullet");
-        info_name.setAttribute("class", "info");
-    
-        bullet.innerHTML = i;
-        info_name.innerText = districtInfo;
-    
-        info_wrapper.appendChild(bullet);
-        info_wrapper.appendChild(info_name);
-        ul.appendChild(info_wrapper);
-    
-        district_description.appendChild(heading);
-        district_description.appendChild(ul);
-    }
     </script>
     <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
       style="text-decoration: none;">#Go Back to Main menu</a></div>

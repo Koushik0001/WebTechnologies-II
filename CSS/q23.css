@@ -2,6 +2,22 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+    border-radius: 0 8px 8px 0;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(47, 138, 199, 0.367);
+    border-radius: 8px 8px 8px 8px;
+    width: 5px;
+}
 
 label {
     padding: 12px 12px 12px 0;
@@ -14,18 +30,18 @@ label {
     background-color: #f2f2f2;
     padding: 20px;
     width: 40%;
-    margin: 100px auto;
+    margin: 50px auto;
 }
 
 .col-25 {
     float: left;
-    width: 50%;
+    width: 51%;
     margin-top: 6px;
 }
 
 .col-75 {
     float: left;
-    width: 50%;
+    width: 49%;
     overflow: visible;
     margin-top: 6px;
 }
@@ -75,7 +91,8 @@ label {
     background-color: rgba(184, 205, 225, 1);
     min-width: 160px;
     max-height: 450px;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
@@ -172,4 +189,15 @@ label {
     font-weight: 600;
     margin: 0 10px 10px 10px;
     padding: 5px;
+}
+.error {
+    margin: 5px 20px 0 27px;
+    width: 27vw;
+    height: fit-content;
+    padding: 0px 13px;
+    font-size: 90%;
+    border-style: none;
+    color: rgb(181, 13, 13);
+
+    box-sizing: border-box;
 }
