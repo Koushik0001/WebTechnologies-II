@@ -66,12 +66,13 @@
         if(queryFor.equals("model")){
             JSONArray models = getModels(type, manufacturer);
             jsonObject.put("models",models);
+           
         }
         else{
             String model = request.getParameter("model");
             int price = getPrice(type, manufacturer, model);
             jsonObject.put("price",price);
-        }
+        } 
     }catch(Exception ex){out.println(ex);}
 %>
 <%=jsonObject%>

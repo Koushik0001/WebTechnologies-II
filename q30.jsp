@@ -71,7 +71,7 @@
         font-family: monospace;
         font-size: 18px;
     }
-    .row.error{
+    .row.error, #mainErrorLabel.error{
         text-align: center; margin:10px auto 20px auto
     }
     #submitBtn {
@@ -86,11 +86,6 @@
         border-radius:5px;
     }
 
-    /* Green */
-    .success {
-    
-    }
-
     #submitBtn:hover {
     background-color: #04AA6D;
     color: white;
@@ -98,18 +93,43 @@
     form{
         display: none;
     }
+    .shake-animation {
+    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) infinite;
+  }
+  .error{
+    width: 
+  }
+  
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+  
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+  
 </style>
 </head>
 <body>
 <%
     ResultSet rsTypes = getAllTypes();
-    %><form><%
+    %><form id="componentsForm" action="scripts/q30_getReceipt.jsp" method="POST">
+        <input type="text" name="query" value="receipt"/><%
     while(rsTypes.next()){
         String type = rsTypes.getString("type");
         %>
-            <input type="text" name="<%=type%>_manufacturer" value=""/>
-            <input type="text" name="<%=type%>_model" value=""/>
-            <input type="text" name="<%=type%>_price" value=""/>
+            <input class="componentFormField" type="text" id="<%=type%>_manufacturer" name="<%=type%>_manufacturer" value=""/>
+            <input class="componentFormField" type="text" id="<%=type%>_model" name="<%=type%>_model" value=""/>
         <%
     }
     %></form><%
@@ -165,10 +185,19 @@
         
     <%}
 %>
-        <div class="row">
-                <div class="col-25"></div>
-                <div class="col-75"><button id="submitBtn" onclick="submitClicked()">Get the total price</button></div>
-            </div>
+    <%-- <div class="container">
+        <div class="row" style="display:flex; justify-content: center;">
+            <div id="mainErrorLabel"></div>
+        </div>
+        <div class="row" style="display:flex; justify-content: center;">
+            <div><button id="submitBtn" onclick="submitBtnClicked();">Get the total price</button></div>
+        </div>
+    </div> --%>
+    
+    <div class="row">
+            <div class="col-25"></div>
+            <div class="col-75"><button id="submitBtn" onclick="document.getElementById('componentsForm').submit();">Get the total price</button></div>
+    </div>
 <script>
     
     function dropDownHandler(elementId){
@@ -183,6 +212,7 @@
     function modelDropDownHandler(type){
         if(document.getElementById(type+"ManufacturerDropdownBtn").textContent.split(" ")[0] == "Select"){
             document.getElementById(type+"ErrorLabel").textContent = "Select a manufacturer first";
+            document.getElementById(type+"ManufacturerDropdownBtn").focus();
             document.getElementById(type+"ErrorLabel").classList.add("error");
         }
         else{
@@ -213,7 +243,11 @@
             if(document.getElementById(type+"ErrorLabel").classList.contains("error"))
                 document.getElementById(type+"ErrorLabel").classList.remove("error");
             document.getElementById(type+"ManufacturerDropdownBtn").textContent = selectedManufaturer;
+            document.getElementById(type+"_manufacturer").value = selectedManufaturer;
+
             document.getElementById(type+"ModelDropdownBtn").textContent = "Select Model";
+            document.getElementById(type+"_model").value = "";
+
             document.getElementById(type+"Price").classList.remove("price");
             document.getElementById(type+"Price").textContent = "";
             var xhr = new XMLHttpRequest();
@@ -229,7 +263,7 @@
                 buttonElement.setAttribute("type", "button");
                 buttonElement.setAttribute("name", type+"Manufacturer");
                 buttonElement.setAttribute("value", models[index]);
-                buttonElement.setAttribute("onclick", "selectedModelDropdown('"+type+"','"+selectedManufaturer+"','"+models[index]+"')");
+                buttonElement.setAttribute("onclick", "selectedModelDropdown('"+type+"','"+selectedManufaturer+"','"+models[index]+"');document.getElementById('"+type+"_model').value='"+models[index]+"'");
                 buttonElement.textContent = models[index];
                 output.appendChild(buttonElement);
               }
@@ -250,10 +284,37 @@
               var price = JSON.parse(this.responseText)["price"];
               var output = document.getElementById(type+"Price");
               output.classList.add("price");
-              output.innerHTML = "Price : &#8377; "+price;
+              output.innerHTML = "Price: &#8377;"+numberWithCommas(price);
             }
           };
           xhr.send();
+        }
+    // function submitBtnClicked(){
+    //     const formFields = document.querySelectorAll('.componentFormField');
+    //     var submit=1;
+    //     submit = formFields.forEach(formField => {
+    //         if(formField.value == "" ){
+    //             var errorLable = document.getElementById("mainErrorLabel");
+    //             errorLable.classList.add("error");
+    //             errorLable.innerHTML = "Both manufacturer and model of a component or none must be filled";
+    //             shakeInput(formField.id);
+    //             return 0;
+    //         }
+    //     });
+    //     if(submit!==0)
+    //         document.getElementById('componentsForm').submit();
+    // }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    async function shakeInput(elementname) {
+            const inputField = document.getElementById(elementname);
+            inputField.classList.add('shake-animation');
+
+            setTimeout(function () {
+                inputField.classList.remove('shake-animation');
+            }, 450);
         }
     </script>
     <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
