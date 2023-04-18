@@ -16,7 +16,7 @@
       </div>
       <div class="col-75">
         <div class="dropdown">
-            <button id="statesDropdownBtn" onclick="document.getElementById('statesDropdown').classList.toggle('show');" class="dropbtn">Select State</button>
+            <button id="statesDropdownBtn" onclick="dropDownHandler('statesDropdown');" class="dropbtn">Select State</button>
             <div id="statesDropdown" class="dropdown-content">
             </div>
           </div>
@@ -29,7 +29,7 @@
       </div>
       <div class="col-75">
         <div class="dropdown">
-            <button id="districtsDropdownBtn" onclick="document.getElementById('districtsDropdown').classList.toggle('show');" class="dropbtn">Select District</button>
+            <button id="districtsDropdownBtn" onclick="dropDownHandler('districtsDropdown');" class="dropbtn">Select District</button>
             <div id="districtsDropdown" class="dropdown-content">
             </div>
           </div>
@@ -46,10 +46,16 @@
 <script>
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
-    function myFunction() {
-      
-    }
     
+    function dropDownHandler(elementId){
+        const elements = document.querySelectorAll('.show');
+        const e = document.getElementById(elementId);
+        elements.forEach(element => {
+            if(e != element )
+                element.classList.remove('show');
+        });
+        e.classList.toggle('show');
+    }
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
