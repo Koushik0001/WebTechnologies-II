@@ -2,8 +2,7 @@
 
 <%!
         static Connection connection;
-        static PreparedStatement getAllTypesQuery;
-        static PreparedStatement getManufacturersQuery;
+        static PreparedStatement getAllSemsQuery;
         private static void connect(HttpSession session, String server, String port, String databaseName, String user, String pass) throws IOException, SQLException {
 
             new com.mysql.jdbc.Driver();
@@ -22,20 +21,12 @@
 
                 connection = DriverManager.getConnection(url, info);
                 if (connection != null) {
-                    String query1 = "SELECT roll, subject FROM marks WHERE semester=?";
-                    String query2 = "SELECT marks FROM marks where roll=? and semester=?;";
-
-                    getAllTypesQuery = connection.prepareStatement(query1, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                    getManufacturersQuery = connection.prepareStatement(query2);
+                    String query1 = "SELECT DISTINCT semester FROM marks"; 
+                    getAllSemsQuery = connection.prepareStatement(query1);
                 }
         }
-        private static ResultSet getAllTypes() throws SQLException, Exception {
-            ResultSet rs = getAllTypesQuery.executeQuery();
-            return rs;
-        }
-        private static ResultSet getManufacturers(String type) throws SQLException, Exception {
-            getManufacturersQuery.setString(1, type);
-            ResultSet rs = getManufacturersQuery.executeQuery();
+        private static ResultSet getAllSems() throws SQLException, Exception {
+            ResultSet rs = getAllSemsQuery.executeQuery();
             return rs;
         }
 %>
@@ -60,7 +51,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="CSS/q23.css">
 <style>
-    .price{
+    .marks{
         margin: 20px auto 0 auto;
         background-color: rgba(32, 170, 4, 0.296);
         border-radius: 5px;
@@ -100,105 +91,71 @@
     width: 
   }
   
-  @keyframes shake {
-    10%, 90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-  
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
-    }
-  
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-  
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
-    }
-  }
-  
 </style>
 </head>
 <body>
-<%
-    ResultSet rsTypes = getAllTypes();
-    %><form id="componentsForm" action="scripts/q30_getReceipt.jsp" method="POST">
-        <input type="text" name="query" value="receipt"/><%
-    while(rsTypes.next()){
-        String type = rsTypes.getString("type");
-        %>
-            <input class="componentFormField" type="text" id="<%=type%>_manufacturer" name="<%=type%>_manufacturer" value=""/>
-            <input class="componentFormField" type="text" id="<%=type%>_model" name="<%=type%>_model" value=""/>
-        <%
-    }
-    %></form><%
-    rsTypes.beforeFirst();
-    while(rsTypes.next()){
-        String type = rsTypes.getString("type");
-        %>
-        <div class="container">
-            <h2 style="text-align: center;">Select <%=type%></h2>
-            <div class="row" id="<%=type%>ErrorLabel"></div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="<%=type%>ManufacturerDropdownBtn" style="font-size: 18px;">Select Manufacturer : </label>
-                </div>
-                <div class="col-75">
-                    <div class="dropdown">
-                        <button id="<%=type%>ManufacturerDropdownBtn" onclick="dropDownHandler('<%=type%>ManufacturerDropdown');" class="dropbtn">Select Manufacturer</button>
-                        <div id="<%=type%>ManufacturerDropdown" class="dropdown-content">
-                        <%
-                            ResultSet rsManufacturers = getManufacturers(type);
-                            while(rsManufacturers.next()){
-                                String manufacturer = rsManufacturers.getString("manufacturer");
-                                %>
-                                    <button type="button" class="dropdown-button" name="<%=type%>Manufacturer" value="<%=manufacturer%>" onclick="selectedManufacturerDropdown('<%=type%>','<%=manufacturer%>')">
-                                        <%=manufacturer%>
-                                    </button>
-                                <%
-                            }
-                        %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
+    <div class="container">
+        <h2 style="text-align: center;">Marks Information</h2>
+        <div class="row">
             <div class="col-25">
-                <label for="<%=type%>ModelDropdownBtn" style="font-size: 18px;">Select Model : </label>
+                <label for="semsDropdownBtn" style="font-size: 18px;">Select semester from dropdown : </label>
             </div>
             <div class="col-75">
                 <div class="dropdown">
-                    <button id="<%=type%>ModelDropdownBtn" onclick="dropDownHandler('<%=type%>ModelDropdown');modelDropDownHandler('<%=type%>')" class="dropbtn">Select Model</button>
-                    <div id="<%=type%>ModelDropdown" class="dropdown-content">
+                    <button id="semsDropdownBtn" onclick="dropDownHandler('semsDropdown');" class="dropbtn">Select Semester</button>
+                    <div id="semsDropdown" class="dropdown-content">
+                    <%
+                        ResultSet rsSems = getAllSems();
+                        while(rsSems.next()){
+                            String semester = rsSems.getString("semester");
+                        %>
+                            
+                            <button type="button" class="dropdown-button" name="sem" value="<%=semester%>" onclick="selectedSem('<%=semester%>')">
+                                <%=semester.equals("sem_1")?"Semester 1":"Semester 2"%>
+                            </button>
+                        <%
+                        }
+                    %>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-25"></div>
-                <div id="<%=type%>Price" class="col-75"></div>
+        <div class="row">
+            <div class="col-25">
+                <label for="rollsDropdownBtn" style="font-size: 18px;">Select roll no. from the dropdown : </label>
+            </div>
+            <div class="col-75">
+                <div class="dropdown">
+                    <button id="rollsDropdownBtn" onclick="dropDownHandler('rollsDropdown');" class="dropbtn">Select Roll No.</button>
+                    <div id="rollsDropdown" class="dropdown-content">
+                    </div>
+                </div>
             </div>
         </div>
-        
-    <%}
-%>
-    <%-- <div class="container">
-        <div class="row" style="display:flex; justify-content: center;">
-            <div id="mainErrorLabel"></div>
+
+        <div class="row">
+            <div class="col-25">
+                <label for="subjectsDropdownBtn" style="font-size: 18px;">Select subject from the dropdown : </label>
+            </div>
+            <div class="col-75">
+                <div class="dropdown">
+                    <button id="subjectsDropdownBtn" onclick="dropDownHandler('subjectsDropdown');" class="dropbtn">Select Subject</button>
+                    <div id="subjectsDropdown" class="dropdown-content">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row" style="display:flex; justify-content: center;">
-            <div><button id="submitBtn" onclick="submitBtnClicked();">Get the total price</button></div>
-        </div>
-    </div> --%>
-    
-    <div class="row">
+
+        <div class="row">
             <div class="col-25"></div>
-            <div class="col-75"><button id="submitBtn" onclick="document.getElementById('componentsForm').submit();">Get the total price</button></div>
+            <div id="marks-description" class="col-75"></div>
+        </div>
     </div>
+
 <script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
     
     function dropDownHandler(elementId){
         const elements = document.querySelectorAll('.show');
@@ -209,19 +166,6 @@
         });
         e.classList.toggle('show');
     }
-    function modelDropDownHandler(type){
-        if(document.getElementById(type+"ManufacturerDropdownBtn").textContent.split(" ")[0] == "Select"){
-            document.getElementById(type+"ErrorLabel").textContent = "Select a manufacturer first";
-            document.getElementById(type+"ManufacturerDropdownBtn").focus();
-            document.getElementById(type+"ErrorLabel").classList.add("error");
-        }
-        else{
-            document.getElementById(type+"ErrorLabel").textContent = "";
-            if(document.getElementById(type+"ErrorLabel").classList.contains("error"))
-                document.getElementById(type+"ErrorLabel").classList.remove("error");
-        }
-    }
-    
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
@@ -238,84 +182,95 @@
     </script>
     
     <script>
-        function selectedManufacturerDropdown(type, selectedManufaturer){
-            document.getElementById(type+"ErrorLabel").textContent = "";
-            if(document.getElementById(type+"ErrorLabel").classList.contains("error"))
-                document.getElementById(type+"ErrorLabel").classList.remove("error");
-            document.getElementById(type+"ManufacturerDropdownBtn").textContent = selectedManufaturer;
-            document.getElementById(type+"_manufacturer").value = selectedManufaturer;
-
-            document.getElementById(type+"ModelDropdownBtn").textContent = "Select Model";
-            document.getElementById(type+"_model").value = "";
-
-            document.getElementById(type+"Price").classList.remove("price");
-            document.getElementById(type+"Price").textContent = "";
+        function selectedSem(sem){
+            document.getElementById("semsDropdownBtn").textContent = (sem==="sem_1")?"Semester 1":"Semester 2";
+            document.getElementById("rollsDropdownBtn").textContent = "Select Roll";
+            document.getElementById("subjectsDropdownBtn").textContent = "Select Subject";
+            document.getElementById("marks-description").classList.remove("marks");
+            document.getElementById("marks-description").textContent = "";
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "scripts/q30_getComponentInfo.jsp?query=model&type="+type+"&manufacturer="+selectedManufaturer);
+            xhr.open("GET", "scripts/q31_getMarksInfo.jsp?query=roll&semester="+sem);
             xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-              var models = JSON.parse(this.responseText)["models"];
-              var output = document.getElementById(type+"ModelDropdown");
+              var rolls = JSON.parse(this.responseText)["rolls"];
+              var output = document.getElementById("rollsDropdown");
               output.innerHTML = "";
-              for (index in models) {
+              for (index in rolls) {
                 var buttonElement = document.createElement("button");
                 buttonElement.setAttribute("class", "dropdown-button");
                 buttonElement.setAttribute("type", "button");
-                buttonElement.setAttribute("name", type+"Manufacturer");
-                buttonElement.setAttribute("value", models[index]);
-                buttonElement.setAttribute("onclick", "selectedModelDropdown('"+type+"','"+selectedManufaturer+"','"+models[index]+"');document.getElementById('"+type+"_model').value='"+models[index]+"'");
-                buttonElement.textContent = models[index];
+                buttonElement.setAttribute("name", "roll");
+                buttonElement.setAttribute("value", rolls[index]);
+                buttonElement.setAttribute("onclick", "selectedRoll('"+sem+"', this.value)");
+                buttonElement.textContent = rolls[index];
                 output.appendChild(buttonElement);
               }
             }
           };
           xhr.send();
         }
-
-       
-
-    function selectedModelDropdown(type, manufacturer, model){
-            document.getElementById(type+"ModelDropdownBtn").textContent = model;
-            document.getElementById(type+"Price").textContent = "";
+    
+        function selectedRoll(sem, roll){
+            document.getElementById("rollsDropdownBtn").textContent = roll;
+            document.getElementById("subjectsDropdownBtn").textContent = "Select Subject";
+            document.getElementById("marks-description").classList.remove("marks");
+            document.getElementById("marks-description").textContent = "";
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "scripts/q30_getComponentInfo.jsp?query=price&type="+type+"&manufacturer="+manufacturer+"&model="+model);
+            xhr.open("GET", "scripts/q31_getMarksInfo.jsp?query=subject&semester="+sem+"&roll="+roll);
             xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-              var price = JSON.parse(this.responseText)["price"];
-              var output = document.getElementById(type+"Price");
-              output.classList.add("price");
-              output.innerHTML = "Price: &#8377;"+numberWithCommas(price);
+              var subjects = JSON.parse(this.responseText)["subjects"];
+              var output = document.getElementById("subjectsDropdown");
+              output.innerHTML = "";
+              for (index in subjects) {
+                var buttonElement = document.createElement("button");
+                buttonElement.setAttribute("class", "dropdown-button");
+                buttonElement.setAttribute("type", "button");
+                buttonElement.setAttribute("name", "roll");
+                buttonElement.setAttribute("value", subjects[index]);
+                buttonElement.setAttribute("onclick", "selectedSubject('"+sem+"', '"+roll+"', this.value)");
+                buttonElement.textContent = subjects[index];
+                output.appendChild(buttonElement);
+              }
             }
           };
           xhr.send();
         }
-    // function submitBtnClicked(){
-    //     const formFields = document.querySelectorAll('.componentFormField');
-    //     var submit=1;
-    //     submit = formFields.forEach(formField => {
-    //         if(formField.value == "" ){
-    //             var errorLable = document.getElementById("mainErrorLabel");
-    //             errorLable.classList.add("error");
-    //             errorLable.innerHTML = "Both manufacturer and model of a component or none must be filled";
-    //             shakeInput(formField.id);
-    //             return 0;
-    //         }
-    //     });
-    //     if(submit!==0)
-    //         document.getElementById('componentsForm').submit();
-    // }
-
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    async function shakeInput(elementname) {
-            const inputField = document.getElementById(elementname);
-            inputField.classList.add('shake-animation');
-
-            setTimeout(function () {
-                inputField.classList.remove('shake-animation');
-            }, 450);
+        function selectedSubject(sem, roll, subject){
+            document.getElementById("subjectsDropdownBtn").textContent = subject;
+            var xhr = new XMLHttpRequest();
+         xhr.open("GET", "scripts/q31_getMarksInfo.jsp?query=marks&semester="+sem+"&roll="+roll+"&subject="+subject);
+            xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var marks = JSON.parse(this.responseText)["marks"];
+                var output = document.getElementById("marks-description");
+                output.innerHTML = "";
+                var output = document.getElementById("marks-description");
+                output.classList.add("marks");
+                output.innerHTML = "Marks: "+marks;
+            }
+          };
+          xhr.send();
         }
+
+
+        function showInfo(sem,roll,subject, marks) {
+        const marks_description = document.querySelector("#marks-description");
+        while (marks_description.firstChild)
+            marks_description.removeChild(marks_description.firstChild);
+        marks_description.classList.remove("active");
+    
+        marks_description.classList.add("active");
+    
+        const heading = document.createElement("p");
+        const ul = document.createElement("ul");
+    
+        heading.setAttribute("class", "heading");
+        ul.setAttribute("class", "info-list");
+        heading.appendChild(document.createTextNode("Marks: "+marks));
+        marks_description.appendChild(heading);
+        marks_description.appendChild(ul);
+    }
     </script>
     <div style="width: 100%; margin: auto; text-align: center; margin-top: 80px; padding-left: 35px;"><a href="."
       style="text-decoration: none;">#Go Back to Main menu</a></div>
