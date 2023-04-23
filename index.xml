@@ -1,57 +1,125 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?xml-stylesheet type="application/xml" href="index.xslt"?>
-<!DOCTYPE assignments[
+<!DOCTYPE assignments [
     <!ELEMENT assignments (question*)>
     <!ELEMENT question (#PCDATA)>
-   
+
     <!ATTLIST question link CDATA "noLink">
     <!ATTLIST question no ID #REQUIRED>
     <!ATTLIST question image CDATA #REQUIRED>
 ]>
 
-    
+
 <assignments>
-    <question no="q1" image="q1.png">
-        Download apache tomcat (.zip) and install(unzip) it. Read documentation and configure tomcat. Check the port it uses. Start the web server. Check if it is working or not. Now, write a simple HTML file (say first.html) containing your name and put it in the web server‟s ROOT directory. Now check if it is available through the web browser and appropriate URL. Change the port of the web server to 8002 and restart the web server. Check if it is working or not.
-    </question>
-    <question no="q2" image="q2.png">
-        Using telnet application and HTTP, obtain the file first.html from a remote machine.
-    </question>
-    <question no="q4" link="q4.html" image="q4.png">
-        Design a web page containing one text box (for login name) and one password field (for password) and a submit button. Label these items.
-    </question>
-    <question no="q5" image="q5.png">
-        Write a necessary JavaScript functions to verify the content of text box and password field in previous assignments. If there is any error, show appropriate message in red color in a label. Use following rules:
-            A login name can only have alphanumeric characters and '_'(underscore)
-            Number of characters in the login must not exceed 10
-            A password must have 6 to 10 characters containing at least one digit and one uppercase letter.
-    </question>
-    <question no="q12" image="q12.png" link="q12.html">
-        Use HTML5 canvas and &lt;SVG&gt; tag to create following picture. Create one and use transformation to create others.
-    </question>
-    <question no="q13" image="q13.png" link="q13.html">
-        Consider a web page that locally stores (using IndexDB) the details (such as name, manufacturer, price etc) of different components(e.g. HDD, Monitor etc) of the computer. The web page contains buttons captioned “add”, “show”, “update” and “delete”. When “add” button is clicked, the pages shows a dialog box to get the details of the item to be added and inserts it to the IndexDB. Implement the functionality of the other buttons. Consider (name, manufacturer) as the primary key.
-    </question>
-    <question no="q15" link="q15.html" image="q15.png">
-        Write a web page that generates a factorial table using a web worker. The main page sends an integer number (say 5) and the worker returns the factorial table (1 to 5) and the main page finally displays it.
-    </question>
-    <question no="q18" link="q18.html" image="q18.png">
-        Develop a simple web page (use SSE) showing price of at least two stocks.
-    </question>
-    <question no="q19" link="q19.jsp" image="q19.png">
-        Create a web page with appropriate forms, and servlets, to perform each of the following actions:
-        
-        a. Form 1: Accepts a string, and displays a list of students whose name contains the given string, their roll numbers, dept_name etc.
-        
-        b. Form 2: Shows a drop down menu containing the names of all departments (generate this from the database), and when a particular department is selected, a list of all students in the department is displayed (as in the previous question).
-    </question>
-    <question no="q22" link="q22.html" image="q22.png">
-        Design a simple page to open an account. The page should contain one text box for login name, one password box and other information. Use AJAX technology to inform if the login name typed is available or not. Write a target JSP page to insert data supplied in the form into the database.
-    </question>
-    <question no="q23" link="q23.html" image="q23.png">
-        Write a web page that contains two drop-down lists captioned states and districts(initially empty). The first one contains the names of states in India. When a specific state is selected, the second one should be populated by the values obtained from server using AJAX technology. Create suitable tables in the database. When a specific state and district is selected, get the information using AJAX and show it.
-    </question>
-    <question no="q24" link="q24.html" image="q24.png">
-        Design a simple login page. Use AJAX technology to print appropriate error message in case of a login failure.
-    </question>
+    <question no="q1" image="q1.png"> Download apache tomcat (.zip) and install(unzip) it. Read
+        documentation and configure tomcat. Check the port it uses. Start the web server. Check if
+        it is working or not. Now, write a simple HTML file (say first.html) containing your name
+        and put it in the web server‟s ROOT directory. Now check if it is available through the web
+        browser and appropriate URL. Change the port of the web server to 8002 and restart the web
+        server. Check if it is working or not. </question>
+    <question no="q2" image="q2.png"> Using telnet application and HTTP, obtain the file first.html
+        from a remote machine. </question>
+    <question no="q4" link="q4.html" image="q4.png"> Design a web page containing one text box (for
+        login name) and one password field (for password) and a submit button. Label these items. </question>
+    <question no="q5" image="q4.png" link="q4.html"> Write a necessary JavaScript functions to
+        verify the content of text box and password field in previous assignments. If there is any
+        error, show appropriate message in red color in a label. Use following rules: A login name
+        can only have alphanumeric characters and '_'(underscore) Number of characters in the login
+        must not exceed 10 A password must have 6 to 10 characters containing at least one digit and
+        one uppercase letter. </question>
+    <question no="q6" image="q6.png" link="q6.html"> Write a web page home.html that loads another
+        page (say logout.html) if user is ideal for 10 seconds. </question>
+    <question no="q7" image="q7.png" link="q7.html"> Write a simplified web page for online bill
+        payment. The page typically contains a group of two radio buttons labeled “pay now” and “pay
+        later”. When the radio button labeled “pay later” is selected, an additional text box (to
+        hold the date of payment) appears. </question>
+    <question no="q8" image="q8.png" link="q8.html"> Write a web page that contains two drop-down
+        lists (i.e. combo box) captioned year and semester. The first one contains values 1st, 2nd,
+        3rd and 4th and second one contains values 1st and 2nd. When a particular year and semester
+        is selected, a list of subjects taught in that specific year and semester should appear. </question>
+    <question no="q9" image="q9.png" link="q9.html"> Write a web page that contains two drop-down
+        lists captioned states and districts(initially empty). The first one contains the names of
+        states in India. When a specific state is selected, the second will have names of districts
+        of the selected state. When a specific state and district is selected, show the information
+        of that district in very brief. </question>
+    <question no="q11" image="q11.png" link="q11.shtml"> Write a question paper as an XML file
+        (question.xml say). The DTD is given in the assignment-sheet. Now, validate your XML file
+        against this DTD. </question>
+    <question no="q12" image="q12.png" link="q12.html"> Use HTML5 canvas and &lt;SVG&gt; tag to
+        create following picture. Create one and use transformation to create others. </question>
+    <question no="q13" image="q13.png" link="q13.html"> Consider a web page that locally stores
+        (using IndexDB) the details (such as name, manufacturer, price etc) of different
+        components(e.g. HDD, Monitor etc) of the computer. The web page contains buttons captioned
+        “add”, “show”, “update” and “delete”. When “add” button is clicked, the pages shows a dialog
+        box to get the details of the item to be added and inserts it to the IndexDB. Implement the
+        functionality of the other buttons. Consider (name, manufacturer) as the primary key. </question>
+    <question no="q15" link="q15.html" image="q15.png"> Write a web page that generates a factorial
+        table using a web worker. The main page sends an integer number (say 5) and the worker
+        returns the factorial table (1 to 5) and the main page finally displays it. </question>
+    <question no="q16" link="q16.html" image="q16.png"> Write a servlet to display the message
+        “Hello World”. </question>
+    <question no="q17" link="chat.html" image="q17.png"> Develop a simple chat web page for using
+        WebSocket. </question>
+    <question no="q18" link="q18.html" image="q18.png"> Develop a simple web page (use SSE) showing
+        price of at least two stocks. </question>
+    <question no="q19" link="q19.jsp" image="q19.png"> Create a web page with appropriate forms, and
+        servlets, to perform each of the following actions: a. Form 1: Accepts a string, and
+        displays a list of students whose name contains the given string, their roll numbers,
+        dept_name etc. b. Form 2: Shows a drop down menu containing the names of all departments
+        (generate this from the database), and when a particular department is selected, a list of
+        all students in the department is displayed (as in the previous question). </question>
+    <question no="q20" link="q20.jsp" image="q20.png"> Write a JSP page to display the message
+        “Hello World”. </question>
+    <question no="q21" link="q21.html" image="q21.png"> Write an application as follows: For the
+        first request, the server generates an HTML file to display the integer 0, with two buttons
+        captioned “prev” and “next”. If the user clicks on the next button, the server sends the
+        integer next to the one displayed. Similarly, when prev button is clicked, the server sends
+        the integer previous to the one displayed. Track the session this using, Hidden fields, URL
+        Rewriting, Cookies, and Session API </question>
+    <question no="q22" link="q22.html" image="q22.png"> Design a simple page to open an account. The
+        page should contain one text box for login name, one password box and other information. Use
+        AJAX technology to inform if the login name typed is available or not. Write a target JSP
+        page to insert data supplied in the form into the database. </question>
+    <question no="q23" link="q23.html" image="q23.png"> Write a web page that contains two drop-down
+        lists captioned states and districts(initially empty). The first one contains the names of
+        states in India. When a specific state is selected, the second one should be populated by
+        the values obtained from server using AJAX technology. Create suitable tables in the
+        database. When a specific state and district is selected, get the information using AJAX and
+        show it. </question>
+    <question no="q24" link="q24.html" image="q24.png"> Design a simple login page. Use AJAX
+        technology to print appropriate error message in case of a login failure. </question>
+    <question no="q25" link="q25.html" image="q25.png"> Write a Java class as follows: a. The
+        constructor takes the name of an XML file containing object type questions with answer. b.
+        The insert() method inserts the questions together with the options and answer into the
+        database table. c. Now write a page that allows user to upload an XML file and use previous
+        class to insert questions into the database </question>
+    <question no="q26" link="q26.jsp" image="q26.jpg"> Write a JSP page to retrieve all the
+        questions together with options and generate a HTML file as follows: a. Each question will
+        have query text and a set of radio buttons one for each option. b. HTML page contains a
+        submit button. c. The visitor answers the questions by selecting appropriate radio buttons
+        and finally presses submit button. d. Also write a JSP page to collect the answers and to
+        inform how many of them are correct after consulting the database. </question>
+    <question no="q27" link="q27.html" image="q27.png"> Use Ajax Technology to change the password
+        of a user. The page usually contains three password boxes and one button. The user will type
+        the old password in the first field and new one in the rest two. </question>
+    <question no="q28" link="q28.shtml" image="q28.png"> Use Ajax Technology to change the password
+        of a user. The page usually contains three password boxes and one button. The user will type
+        the old password in the first field and new one in the rest two. </question>
+    <question no="q30" link="q30.jsp" image="q30.png"> Create a database table to contain price,
+        manufacturer and model of different components (such as HDD, Motherboard, processor, RAM,
+        Monitor, CD/DVD R/W etc.) of a computer system. Create an html form where user will select
+        model and manufacturer of different components and asks for the total price. Write a JSP
+        page to display the total price of the system for the given configuration after obtaining
+        the information from the database. </question>
+    <question no="q31" link="q31.jsp" image="q31.png"> Create a database to store the marks of all
+        students in all semester in all subjects. Write a JSP page to select the semester, roll
+        number and subject. JSP page will in turn find the corresponding marks and display it. You
+        can make your own assumptions depending upon your needs. </question>
+    <question no="q32" link="q32.html" image="q32.png"> Design a HTML page to create an account. The
+        page should contain one text box for login name chosen, two password boxes (for double
+        verification), one for email address, one for your name and one for your contact number and
+        others ( if you think necessary) . When a visitor provide these data, validate them using
+        JavaScript code. If all data are correct, send it to JSP program (say create.jsp) which
+        inserts the data into database tables. Also write pages to check whether a user can now
+        login or not. </question>
 </assignments>

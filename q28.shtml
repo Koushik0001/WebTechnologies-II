@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      xmp {
+        font-size: 14px;
+        font-family: "Courier New", Courier, monospace;
+        background-color: #F8F8F8;
+        padding: 10px;
+        border: 1px solid #CCCCCC;
+        border-radius: 5px;
+        overflow-x: scroll;
+        display: block;
+        white-space: pre;
+        overflow-x: scroll;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>The XSLT file is shown below : </h2>
+    <p>( The content of the XSLT file was included using <strong><em>SSI</em></strong> )</p>
+    <xmp>
+      <!--#include file="q28.xslt" -->
+    </xmp>
+  </body>
+</html>
