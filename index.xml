@@ -76,7 +76,7 @@
         integer next to the one displayed. Similarly, when prev button is clicked, the server sends
         the integer previous to the one displayed. Track the session this using, Hidden fields, URL
         Rewriting, Cookies, and Session API </question>
-    <question no="q22" link="q22.html" image="q22.png"> Design a simple page to open an account. The
+    <question no="q22" link="q22.jsp" image="q22.png"> Design a simple page to open an account. The
         page should contain one text box for login name, one password box and other information. Use
         AJAX technology to inform if the login name typed is available or not. Write a target JSP
         page to insert data supplied in the form into the database. </question>
